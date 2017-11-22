@@ -22,7 +22,7 @@ class BackTest
 	public function run($config)
 	{
 		$this->config = $config;
-		$this->client = Client::create(Configuration::apiKey("1WjZUju0Ww48rzwG", "5yNxwN3xAX74Nu1SCF2TAcUGa554P1Ne"));
+		$this->client = Client::create(Configuration::apiKey($this->config['coinbase']['key'], $this->config['coinbase']['secret']));
 		$this->config = $this->getConfig();
 
 		$this->getPrices();
