@@ -1,0 +1,98 @@
+th, td {
+	padding: 5px;
+	text-align: center;
+}
+
+/* ==========================================================================
+   Author's custom styles
+   ========================================================================== */
+html, body {
+	width: 100%;
+	height: 100%;
+}
+
+.transaction-row {
+	padding: 10px;
+	border-radius: 10px;
+	border: 1px solid black;
+	color: white;
+	margin-bottom: 5px;
+	font-size: 12px;
+	margin-left: calc(50% - 150px);
+	width: 300px;
+	text-align: center;
+}
+
+.transaction-time {
+	font-weight: bold;
+	font-size: 15px;
+}
+
+.transaction-time {
+	margin-bottom: 5px;
+}
+
+.transaction-label {
+	font-weight: bold;
+	margin-right: 5px;
+}
+
+.transaction-label, .transaction-value {
+	display: inline-block
+}
+
+.transaction-line {
+	width: 275px;
+}
+
+#log-line {
+	white-space: pre;
+    width: 300px;
+    display: inline-block;
+}
+
+#floating-newsfeed {
+	position: absolute;
+    top: 52px;
+    right: 0px;
+    height: calc(100% - 52px);
+}
+
+#newsfeed-expand-collapse {
+	position: absolute;
+    left: -30px;
+	width: 30px;
+    height: 30px;
+    border-top-left-radius: 5px;
+    font-weight: bold;
+    font-size: 15px;
+    border-bottom-left-radius: 5px;
+}
+
+#newsfeed-container {
+	display: none;
+	padding: 5px;
+	overflow: scroll;
+	height: calc(100% - 52px);
+}
+
+#config {
+	display: inline-block;
+}
+
+.config-form {
+	display: none;
+	width: 400px;
+	text-align: center;
+	padding: 15px;
+    position: absolute;
+    z-index: 1001;
+    top: 53px;
+    border: 1px solid black;
+    right: 15px;
+    border-radius: 5px;
+    background-color: lightgray;
+}
+
+
+
