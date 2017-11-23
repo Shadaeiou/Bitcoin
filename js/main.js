@@ -157,21 +157,23 @@ function loadChart() {
 			});
 		}
 
-		annotations.push({
-            drawTime: "afterDatasetsDraw",
-            id: "hline2",
-            type: "line",
-            mode: "horizontal",
-            scaleID: "y-axis-0",
-            value: data[data.length - 1].smallest,
-            borderColor: "purple",
-            borderWidth: 2,
-            label: {
-				backgroundColor: "purple",
-				content: "Smallest ($"+data[data.length - 1].smallest+")",
-				enabled: true
-            }
-		});
+		if (data[data.length - 1].smallest != null) {
+			annotations.push({
+	            drawTime: "afterDatasetsDraw",
+	            id: "hline2",
+	            type: "line",
+	            mode: "horizontal",
+	            scaleID: "y-axis-0",
+	            value: data[data.length - 1].smallest,
+	            borderColor: "purple",
+	            borderWidth: 2,
+	            label: {
+					backgroundColor: "purple",
+					content: "Smallest ($"+data[data.length - 1].smallest+")",
+					enabled: true
+	            }
+			});
+		}
 
 		var ctx   = document.getElementById("myChart").getContext('2d');
 		if (window.chart) {

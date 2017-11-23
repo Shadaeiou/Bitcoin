@@ -42,13 +42,17 @@ class RunImport
 
 	protected function addDataPoint()
 	{
+		// TODO: extract this logic into a function is also used in checkbuys
 		$smallest = 99999999;
 		foreach ($this->transactions as $transaction) {
 			if ($transaction['active'] == false)     {continue;}
 
-			$minutes = (strtotime('now') - $transaction['unix']) / 60;
+			$hours = (strtotime('now') - $transaction['unix']) / 60 / 60;
+			if ($hours > 12) {continue;}
+
 			if ($transaction['price_paid'] < $smallest) {$smallest    = $transaction['price_paid'];}
 		}
+
 		$buy_price  = $this->getBuyPrice();
 		$sell_price = $this->getSellPrice();
 		$buy_avg    = $this->getBuyAvg();
@@ -63,7 +67,7 @@ class RunImport
 			'smooth_buy_avg'  => $smooth_avg,
 			'smooth_interval' => $this->config['smooth_avg'],
 			'price_needed'    => round($this->getPriceNeeded($buy_price), 2),
-			'smallest'        => round($smallest, 2)
+			'smallest'        => ($smallest == 99999999) ? null : round($smallest - ($smallest *.01), 2) // Should be in a function -_-
 		);
 		if (count($this->prices) > 10080) {
 			array_shift($this->prices);
@@ -83,7 +87,9 @@ class RunImport
 		foreach ($this->transactions as $transaction) {
 			if ($transaction['active'] == false)     {continue;}
 
-			$minutes = (strtotime('now') - $transaction['unix']) / 60;
+			$hours = (strtotime('now') - $transaction['unix']) / 60 / 60;
+			if ($hours > 12) {continue;}
+
 			if ($transaction['price_paid'] < $smallest) {$smallest    = $transaction['price_paid'];}
 		}
 
