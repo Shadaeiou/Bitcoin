@@ -1,6 +1,5 @@
 <?php
-chdir(dirname(__FILE__));
-include_once('./CoinbaseAPI/vendor/autoload.php');
+include_once('../CoinbaseAPI/vendor/autoload.php');
 use Coinbase\Wallet\Client;
 use Coinbase\Wallet\Configuration;
 use Coinbase\Wallet\Resource\Buy;
@@ -8,80 +7,112 @@ use Coinbase\Wallet\Value\Money;
 use Coinbase\Wallet\Enum\CurrencyCode;
 use Coinbase\Wallet\Resource\Account;
 
-error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
-
-class BackTest
+class PriceImport
 {
+	private $buy_amount    = 25;
 	private $client        = null;
-	private $prices        = array();
-	private $all_prices    = null;
+	private $transactions  = null;
+	private $prices        = null;
+	private $wallet        = null;
 	private $config        = null;
-	private $transactions  = array();
-	private $wallet        = array('plus_minus' => 300);
+	private $bc_data       = array();
 
-	public function run($config)
+	public static function run()
 	{
-		$this->config = $config;
-		$this->client = Client::create(Configuration::apiKey($this->config['coinbase']['key'], $this->config['coinbase']['secret']));
 		$this->config = $this->getConfig();
+		$this->client = Client::create(Configuration::apiKey($this->config['coinbase']['key'], $this->config['coinbase']['secret']));
 
+		$this->getWallet();
+		$this->getTransactions();
 		$this->getPrices();
-		$this->runPrices();
+
+		$this->checkSells();
+		$this->checkBuys();
+		$this->addDataPoint();
+
+		$this->setTransactions();
+		$this->setWallet();
+		$this->setPrices();
 	}
 
-	protected function runPrices()
+	protected function addDataPoint()
 	{
-		foreach ($this->all_prices as $count => $price) {
-			$this->prices[] = $price;
-			$this->checkSells();
-			$this->checkBuys($price['unix']);
-		}
-
-		print "<pre>";
-		print_r($this->wallet);
-		print "</pre>";
-
-		print "<pre>";
-		print_r($this->transactions);
-		print "</pre>";
-	}
-
-	protected function checkBuys($unix)
-	{
-		$avg_buy_price        = $this->getBuyAvg();
-		$current_buy_price    = $this->getBuyPrice();
-		$smooth_avg_buy_price = $this->getSmoothBuyAvg();
-		$max_tf_hr            = $this->getBuyMax(strtotime('-1 day', $unix));
-
-		// If price is less than 24hr average and it's no longer going down
-		if ($current_buy_price > $avg_buy_price)        {return;}
-		if ($current_buy_price < $smooth_avg_buy_price) {return;}
-
-		// Make sure we have enough cash
-		if ($this->wallet['plus_minus'] < 25) {return;}
-
-		$smallest    = 99999999;
-		$most_recent = 99999999;
+		// TODO: extract this logic into a function is also used in checkbuys
+		$smallest = 99999999;
 		foreach ($this->transactions as $transaction) {
 			if ($transaction['active'] == false)     {continue;}
-			$minutes = (strtotime('now') - $transaction['unix']) / 60;
-			if ($minutes < $most_recent)                {$most_recent = $minutes;                  }
+
+			$hours = (strtotime('now') - $transaction['unix']) / 60 / 60;
+			if ($hours > 12) {continue;}
+
 			if ($transaction['price_paid'] < $smallest) {$smallest    = $transaction['price_paid'];}
 		}
 
-		// Make sure this amount is 1% less than the smallest amount we've already bought
-		if ($current_buy_price > $smallest - ($smallest *.01) && $smallest != 99999999) {return;}
+		$buy_price  = $this->getBuyPrice();
+		$sell_price = $this->getSellPrice();
+		$buy_avg    = $this->getBuyAvg();
+		$smooth_avg = $this->getSmoothBuyAvg();
+		$this->prices[] = array(
+			'unix'            => time(),
+			'readable'        => date('c'),
+			'bc_buy'          => $buy_price,
+			'bc_sell'         => $sell_price,
+			'buy_avg'         => $buy_avg,
+			'avg_interval'    => $this->config['main_avg'],
+			'smooth_buy_avg'  => $smooth_avg,
+			'smooth_interval' => $this->config['smooth_avg'],
+			'price_needed'    => round($this->getPriceNeeded($buy_price), 2),
+			'smallest'        => ($smallest == 99999999) ? null : round($smallest - ($smallest *.01), 2) // Should be in a function -_-
+		);
+		if (count($this->prices) > 10080) {
+			array_shift($this->prices);
+		}
+	}
 
-		// Check to make sure the price_needed isn't completely unreasonable
-		$price_needed = $this->getPriceNeeded($current_buy_price);
-		if ($price_needed > $max_tf_hr) {return;}
+	protected function checkBuys()
+	{
+		print "\t"."Checking buys...".PHP_EOL;
 
-		$this->buyBCForAmount($this->wallet['plus_minus']*.15);
+		$avg_buy_price        = $this->getBuyAvg();
+		$current_buy_price    = $this->getBuyPrice();
+		$smooth_avg_buy_price = $this->getSmoothBuyAvg();
+		$max_tf_hr            = $this->getBuyMax(strtotime('-1 day'));
+		$price_needed         = $this->getPriceNeeded($current_buy_price);
+		$smallest             = 99999999;
+		foreach ($this->transactions as $transaction) {
+			if ($transaction['active'] == false)     {continue;}
+
+			$hours = (strtotime('now') - $transaction['unix']) / 60 / 60;
+			if ($hours > 12) {continue;}
+
+			if ($transaction['price_paid'] < $smallest) {$smallest    = $transaction['price_paid'];}
+		}
+
+		// If price is less than 24hr average and it's no longer going down
+		// print "\t\t"."Buy price: ".$current_buy_price.PHP_EOL;
+		// print "\t\t"."Avg buy price: ".$avg_buy_price.PHP_EOL;
+		// print "\t\t"."Smooth buy price: ".$smooth_avg_buy_price.PHP_EOL;
+		// print "\t\t"."Cash in hand: ".$this->wallet['plus_minus'].PHP_EOL;
+		// print "\t\t"."Smallest: ".round(($smallest - ($smallest *.01)), 2).PHP_EOL;
+		// print "\t\t"."Price needed: ".$price_needed.PHP_EOL;
+		if ($current_buy_price > $avg_buy_price)                                        {print "\t\t"."Current buy price > avg 24hr price".PHP_EOL;return;   }
+		if ($current_buy_price > $smallest - ($smallest *.01) && $smallest != 99999999) {print "\t\t"."Bought already at this amount".PHP_EOL;return;          }
+		if ($price_needed > $max_tf_hr)                                                 {print "\t\t"."Price needed to profit not reasonable".PHP_EOL;return;  }
+		if ($this->wallet['plus_minus'] < 25)                                           {print "\t\t"."Not enough cash in wallet".PHP_EOL;return;          }
+		if ($current_buy_price < $smooth_avg_buy_price)                                 {print "\t\t"."Price still dropping".PHP_EOL;return;          }
+
+		$this->buyBCForAmount($this->wallet['plus_minus']*.2);
 	}
 
 	protected function buyBCForAmount($amount) {
+		// Record the price we paid per BC, the price we need BC to hit to sell, the time we bought, how many BC we bought, and how much $$ we spent
+		print "\t\t"."Attempting to buy $".$amount;
+
+		// TODO: use API to buy BC
 		list($bought_bc, $money_spent, $price_paid) = $this->buyBC($amount);
 		$price_needed                               = $this->getPriceNeeded($price_paid);
+
+		print "\t\t"."Successfully bought $".$amount.PHP_EOL;
 
 		$new_transaction = array(
 			'price_paid'   => $price_paid,
@@ -139,13 +170,14 @@ class BackTest
 		// 1% profit and 1% from selling
 		$price_paid_with_fee                         = $price_paid;
 		$price_paid_with_fee_and_earning             = ($price_paid_with_fee * .01) + $price_paid_with_fee;
-		$price_paid_with_fee_and_earning_and_selling = ($price_paid_with_fee_and_earning * .03) + $price_paid_with_fee_and_earning;
+		$price_paid_with_fee_and_earning_and_selling = ($price_paid_with_fee_and_earning * .01) + $price_paid_with_fee_and_earning;
 
 		return $price_paid_with_fee_and_earning_and_selling;
 	}
 
 	protected function getBuyAvg()
 	{
+		if ($this->bc_data['buy_avg']) {return $this->bc_data['buy_avg'];}
 		$total    = 0;
 		$main_avg = $this->config['main_avg']*60;
 		$start    = (count($this->prices)-1) - $main_avg;
@@ -156,12 +188,13 @@ class BackTest
 				$ct_act++;
 			}
 		}
-
-		return round($total / $ct_act, 2);
+		$this->bc_data['buy_avg'] = round($total / $ct_act, 2);
+		return $this->bc_data['buy_avg'];
 	}
 
 	protected function getBuyMin($unix)
 	{
+		if ($this->bc_data['buy_min']) {return $this->bc_data['buy_min'];}
 		$min = 9999999;
 		foreach ($this->prices as $price) {
 			if ($unix && $unix < $price['unix']) {continue;}
@@ -169,11 +202,13 @@ class BackTest
 				$min = $price['bc_buy'];
 			}
 		}
-		return $min;
+		$this->bc_data['buy_min'] = $min;
+		return $this->bc_data['buy_min'];
 	}
 
 	protected function getBuyMax($unix)
 	{
+		if ($this->bc_data['buy_max']) {return $this->bc_data['buy_max'];}
 		$max = -1;
 		foreach ($this->prices as $price) {
 			if ($unix && $unix < $price['unix']) {continue;}
@@ -181,12 +216,13 @@ class BackTest
 				$max = $price['bc_buy'];
 			}
 		}
-
-		return $max;
+		$this->bc_data['buy_max'] = $max;
+		return $this->bc_data['buy_max'];
 	}
 
 	protected function getSmoothBuyAvg()
 	{
+		if ($this->bc_data['smooth_avg']) {return $this->bc_data['smooth_avg'];}
 		$total      = 0;
 		$smooth_avg = $this->config['smooth_avg'];
 		$start      = (count($this->prices)-1) - $smooth_avg;
@@ -197,37 +233,55 @@ class BackTest
 				$ct_act++;
 			}
 		}
-		return round($total / $ct_act, 2);
+		$this->bc_data['smooth_avg'] = round($total / $ct_act, 2);
+		return $this->bc_data['smooth_avg'];
 	}
 
 	protected function getSmoothSellAvg()
 	{
+		if ($this->bc_data['smooth_avg_sell']) {return $this->bc_data['smooth_avg_sell'];}
 		$total      = 0;
 		$smooth_avg = $this->config['smooth_avg'];
 		$start      = (count($this->prices)-1) - $smooth_avg;
-		$ct_act     = 0;
+		$ct_act    = 0;
 		foreach ($this->prices as $count => &$price) {
 			if ($count >= $start) {
 				$total += $price['bc_sell'];
 				$ct_act++;
 			}
 		}
-
-		return round($total / $ct_act, 2);
+		$this->bc_data['smooth_avg_sell'] = round($total / $ct_act, 2);
+		return $this->bc_data['smooth_avg_sell'];
 	}
 
-	protected function getBuyPrice()
+	protected function getBuyPrice($type = 'bc')
 	{
-		return $this->prices[count($this->prices) - 1]['bc_buy'];
+		if ($type == 'bc') 
+		{
+			if (!$this->bc_data['buy']) 
+			{
+				$this->bc_data['buy'] = $this->client->getBuyPrice(null, array('quote' => true))->getAmount();
+			}
+			return $this->bc_data['buy'];
+		}
 	}
 
-	protected function getSellPrice()
+	protected function getSellPrice($type = 'bc')
 	{
-		return $this->prices[count($this->prices) - 1]['bc_sell'];
+		if ($type == 'bc') 
+		{
+			if (!$this->bc_data['sell']) 
+			{
+				$this->bc_data['sell'] = $this->client->getSellPrice(null, array('quote' => true))->getAmount();
+			}
+			return $this->bc_data['sell'];
+		}
 	}
 
 	protected function checkSells()
 	{
+		print "\t"."Checking sells...".PHP_EOL;
+
 		$sells      = array();
 		$smooth     = $this->getSmoothSellAvg();
 		$sell_price = $this->getSellPrice();
@@ -235,12 +289,12 @@ class BackTest
 			if (!$transaction['active']) {continue;}
 
 			if ($transaction['price_needed'] <= $sell_price) {
-				if ($sell_price > $smooth) {continue;}
+				if ($sell_price > $smooth) {print "\t\t"."Sale price still rising".PHP_EOL;continue;}
 				$sells[] = $transaction;
 			}
 		}
 
-		if (!$sells) {return;}
+		if (!$sells) {print "\t\t"."No active sells meet criteria".PHP_EOL;return;}
 
 		$this->sellBC($sells);
 	}
@@ -275,16 +329,16 @@ class BackTest
 
 	protected function getPrices()
 	{
-		if (!$this->all_prices)
+		if (!$this->prices)
 		{
 			$prices_json = file_get_contents('prices.txt');
 			$prices      = array();
 			if ($prices_json) {
 				$prices  = json_decode($prices_json, true);
 			}
-			$this->all_prices = $prices;
+			$this->prices = $prices;
 		}
-		return $this->all_prices;
+		return $this->prices;
 	}
 
 	protected function getWallet()
@@ -302,11 +356,18 @@ class BackTest
 	}
 
 	protected function sellBC($sells) {
+		print "\t\t".count($sells)." active sell(s) met criteria".PHP_EOL;
 		$total_bc   = 0.0;
 		$sell_price = $this->getSellPrice();
 		foreach ($sells as $sell) {
 			$total_bc += $sell['bc_bought'];
 		}
+
+		print "\t\t"."Attempting to sell ".$total_bc."BC".PHP_EOL;
+
+		// TODO sell BC
+
+		print "\t\t"."Successfully sold ".$total_bc."BC".PHP_EOL;
 
 		$total_money_sold  = $total_bc*$sell_price;
 		$money_divided     = $total_money_sold/count($sells);
@@ -315,6 +376,8 @@ class BackTest
 			foreach ($sells as $sell) {
 				if ($transaction['unix'] == $sell['unix']) {
 					$transaction['active']     = false;
+					$transaction['sell_price'] = $sell_price;
+					$transaction['time_sold']  = strtotime('now');
 					$transaction['money_sold'] = round($money_divided, 2);
 
 					$this->updateWallet($money_divided);
@@ -327,6 +390,10 @@ class BackTest
 		$before                      =  $this->wallet['plus_minus'];
 		$this->wallet['plus_minus'] += $amount;
 		round($this->wallet['plus_minus'], 2);
+
+		print "\t\t"."Wallet changed from $".$before." to $".$this->wallet['plus_minus'].PHP_EOL;
+
+		mail('burke.blazer@gmail.com', 'BC Money Transaction', "Went from $".$before." to $".$this->wallet['plus_minus']);
 	}
 
 	protected function setPrices()
@@ -344,9 +411,3 @@ class BackTest
 		file_put_contents('wallet.txt', json_encode($this->wallet));
 	}
 }
-
-$config = json_decode($_REQUEST['json_config'], true);
-$bt     = new BackTest();
-$bt->run($config);
-
-?>

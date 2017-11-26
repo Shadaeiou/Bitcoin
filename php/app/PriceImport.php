@@ -1,31 +1,20 @@
-#!/usr/bin/php -q
 <?php
-chdir(dirname(__FILE__));
-include_once('./CoinbaseAPI/vendor/autoload.php');
 use Coinbase\Wallet\Client;
 use Coinbase\Wallet\Configuration;
-use Coinbase\Wallet\Resource\Buy;
-use Coinbase\Wallet\Value\Money;
-use Coinbase\Wallet\Enum\CurrencyCode;
-use Coinbase\Wallet\Resource\Account;
 
-error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
-print date('h:i A').PHP_EOL;
-
-class RunImport
+class PriceImport
 {
-	private $buy_amount    = 25;
-	private $client        = null;
-	private $transactions  = null;
-	private $prices        = null;
-	private $wallet        = null;
-	private $config        = null;
-	private $bc_data       = array();
-
-	public function run()
+   /**
+	*
+	*
+	* @extern true
+	**/
+	public static function run()
 	{
-		$this->config = $this->getConfig();
-		$this->client = Client::create(Configuration::apiKey($this->config['coinbase']['key'], $this->config['coinbase']['secret']));
+		$client     = Client::create(Configuration::apiKey());
+		$buy_price  = $client->getBuyPrice(null,  array('quote' => true))->getAmount();
+		Utility::uprint($buy_price);exit;
+		$sell_price = $client->getSellPrice(null, array('quote' => true))->getAmount();
 
 		$this->getWallet();
 		$this->getTransactions();
@@ -382,6 +371,7 @@ class RunImport
 				if ($transaction['unix'] == $sell['unix']) {
 					$transaction['active']     = false;
 					$transaction['sell_price'] = $sell_price;
+					$transaction['time_sold']  = strtotime('now');
 					$transaction['money_sold'] = round($money_divided, 2);
 
 					$this->updateWallet($money_divided);
@@ -415,8 +405,3 @@ class RunImport
 		file_put_contents('wallet.txt', json_encode($this->wallet));
 	}
 }
-
-$import = new RunImport();
-$import->run();
-
-?>

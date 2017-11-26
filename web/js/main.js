@@ -5,12 +5,26 @@ $( document ).ready(function() {
 	if (window.localStorage.bitcoin_resolution) {$('#resolution').val(window.localStorage.bitcoin_resolution);}
 	if (window.localStorage.bitcoin_start)      {$('#start').val(window.localStorage.bitcoin_start);          }
 
-	$('#resolution').on('change', updateResolution);
-	$('#start').on('change', updateResolution);
-	$('#newsfeed-expand-collapse').on('click', expandCollapseNF);
-	$('#config').on('click', expandCollapseConfig);
+	$('#resolution')              .on('change', updateResolution    );
+	$(window)                     .on('click',  checkClick          );
+	$('#start')                   .on('change', updateResolution    );
+	$('#newsfeed-expand-collapse').on('click',  expandCollapseNF    );
+	$('#config')                  .on('click',  expandCollapseConfig);
+
     startApplication();
 });
+
+function checkClick(evt) {
+	var closeNF     = true;
+	var closeConfig = true;
+	if (evt.target == document.getElementById("config-form"))              {closeConfig = false;}
+	if (evt.target == document.getElementById("floating-newsfeed"))        {closeNF     = false;}
+	if (evt.target == document.getElementById("config"))                   {closeConfig = false;}
+	if (evt.target == document.getElementById("newsfeed-expand-collapse")) {closeNF     = false;}
+
+	if (closeNF     && $('#newsfeed-container').is(':visible')) {$('#newsfeed-container').toggle();$('#newsfeed-expand-collapse').text('+');}
+	if (closeConfig && $('#config-form')       .is(':visible')) {$('#config-form').toggle();                                                }
+}
 
 function expandCollapseConfig(evt) {
 	var $button = $(evt.target);
@@ -39,7 +53,7 @@ function startApplication() {
 
 function loadWallet() {
 	$.getJSON('wallet.txt', function(data) {
-		$('#wallet').text('$'+data.plus_minus);
+		$('#wallet').text('$'+Math.round(data.plus_minus*100) / 100);
 		loadTransactions();
 	});
 }
@@ -64,6 +78,10 @@ function loadTransactions() {
             	plusMinus += (transaction.money_sold - transaction.money_spent);
             	$transactionDiv.find('.transaction-sold').text('$'+transaction.money_sold);
             	$transactionDiv.find('.transaction-sold').parent().show();
+            	$transactionDiv.find('.transaction-time-active').text(moment.unix(transaction.unix).from(moment.unix(transaction.time_sold), true));
+            	$transactionDiv.find('.transaction-time-active').parent().show();
+            	$transactionDiv.find('.transaction-roi').text('$'+Math.round((transaction.money_sold - transaction.money_spent)*100) / 100);
+            	$transactionDiv.find('.transaction-roi').parent().show();
             }
             
 			$transactionContainer.append($transactionDiv);

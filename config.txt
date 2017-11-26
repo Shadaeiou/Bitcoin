@@ -1,1 +1,0 @@
-{"main_avg":24,"smooth_avg":5,"coinbase":{"key":"xxxx","secret":"xxxx"}}

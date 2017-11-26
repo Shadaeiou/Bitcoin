@@ -1,7 +1,11 @@
 #!/usr/bin/php -q
 <?php
 chdir(dirname(__FILE__));
-include_once('./CoinbaseAPI/vendor/autoload.php');
+
+// Includes
+include_once("../config/config.php");
+include_once("../php/Utility.php");
+include_once('../php/CoinbaseAPI/vendor/autoload.php');
 use Coinbase\Wallet\Client;
 use Coinbase\Wallet\Configuration;
 use Coinbase\Wallet\Resource\Buy;
@@ -9,7 +13,7 @@ use Coinbase\Wallet\Value\Money;
 use Coinbase\Wallet\Enum\CurrencyCode;
 use Coinbase\Wallet\Resource\Account;
 
-$configuration  = Configuration::apiKey("1WjZUju0Ww48rzwG", "5yNxwN3xAX74Nu1SCF2TAcUGa554P1Ne");
+$configuration  = Configuration::apiKey(CB_API_KEY, CB_API_SECRET);
 $client         = Client::create($configuration);
 
 // Get your btc wallet account aka account to send btc to
@@ -29,7 +33,7 @@ foreach ($all_payment_methods as $payment_method) {
 	}
 }
 
-$expected = new Money(5, CurrencyCode::USD);
+$expected = new Money(50, CurrencyCode::USD);
 $buy      = new Buy();
 $buy->setTotal($expected);
 $buy->setPaymentMethod($usd_wallet_payment_method);
@@ -113,5 +117,3 @@ print_r($data);
 //         )
 
 // )
-
-458.34

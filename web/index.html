@@ -52,7 +52,7 @@
             <canvas id="myChart" style="width:100%;height:100%;"></canvas>
         </div>
 
-        <div class="config-form">
+        <div id="config-form" class="config-form">
             <div class="form-group">
               <label for="start"># Pts. to View:</label>
               <input min="2" max="1440" type="number" style="width: 110px;display: inline-block;" class="form-control" id="start">
@@ -87,6 +87,8 @@
                 <div class="transaction-line"><div class="transaction-label">Needed:</div><div class="transaction-value transaction-needed"></div></div>
                 <div class="transaction-line"><div class="transaction-label">Spent:</div><div class="transaction-value transaction-spent"></div></div>
                 <div style="display: none;" class="transaction-line"><div class="transaction-label">Sold:</div><div class="transaction-value transaction-sold"></div></div>
+                <div style="display: none;" class="transaction-line"><div class="transaction-label">ROI:</div><div class="transaction-value transaction-roi"></div></div>
+                <div style="display: none;" class="transaction-line"><div class="transaction-label">Time Active:</div><div class="transaction-value transaction-time-active"></div></div>
             </div>
         </div>
 
