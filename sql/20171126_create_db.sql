@@ -1,4 +1,5 @@
 CREATE DATABASE cryptocurrent;
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 CREATE TABLE "user" (
      user_id    SERIAL PRIMARY KEY,
@@ -50,4 +51,14 @@ CREATE TABLE currency_price_point (
 	buy_price               MONEY NOT NULL,
 	sell_price              MONEY NOT NULL,
 	unix_time               BIGINT NOT NULL
+);
+
+CREATE TABLE algorithm (
+	algorithm_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+	name         varchar(40) NOT NULL CHECK (name <> ''),
+	text         TEXT NOT NULL,
+	sandbox      boolean default true,
+	status       boolean DEFAULT FALSE,
+	created      timestamp DEFAULT NOW(),
+	modified     timestamp DEFAULT NOW()
 );

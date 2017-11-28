@@ -1,0 +1,30 @@
+{
+  "name": "Crypto",
+  "version": "0.0.0",
+  "description": "Things",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Shadaeiou/Bitcoin"
+  },
+  "author": "Burke Blazer",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Shadaeiou/Bitcoin/issues"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "fs": "0.0.1-security",
+    "lodash": "^4.17.4",
+    "nodemon": "^1.12.1",
+    "path": "^0.12.7",
+    "pg-bricks": "^0.6.0",
+    "safe-eval": "^0.3.0",
+    "serializerr": "^1.0.3"
+  }
+}
