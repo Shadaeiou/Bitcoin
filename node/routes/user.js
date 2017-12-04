@@ -4,7 +4,7 @@ const serializerr = require('serializerr')
 const utils       = require('../utils')
 
 // logout
-router.get('/logout', async function(req, res) {
+router.post('/logout', async function(req, res) {
     req.session.destroy(function(err){
         if(err){
             res.status(500).json(serializerr(err))
@@ -13,22 +13,6 @@ router.get('/logout', async function(req, res) {
             utils.successTrue(res, null, 'Successfully logged out')
         }
     });
-})
-
-// params
-//   id - user id
-router.get('/:id', async function(req, res) {
-    let result = null
-
-    try {
-        result = await User.getByID(req.params.id)
-    }
-    catch(e) {
-        res.status(500).json(serializerr(e))
-        return
-    }
-
-    utils.successTrue(res, result, 'Successfully retrieved user')
 })
 
 // login
@@ -74,6 +58,22 @@ router.post('/register', async function(req, res) {
     if (result === false) {utils.successFalse(res, null, 'User already exists');return;}
 
     utils.successTrue(res, null, 'Successfully registered user')
+})
+
+// params
+//   id - user id
+router.get('/:id', async function(req, res) {
+    let result = null
+
+    try {
+        result = await User.getByID(req.params.id)
+    }
+    catch(e) {
+        res.status(500).json(serializerr(e))
+        return
+    }
+
+    utils.successTrue(res, result, 'Successfully retrieved user')
 })
 
 module.exports = router

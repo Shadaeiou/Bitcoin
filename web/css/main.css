@@ -32,6 +32,10 @@ footer p {
     padding-top: 12px;
 }
 
+.active {
+    font-weight: bolder;
+}
+
 .fa {
     color: white;
 }

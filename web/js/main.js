@@ -2,7 +2,11 @@ $(document).ready(function() {
 	$.ajaxSetup({ cache: false });
 
 	// Load our modules
-	Utility.Module.launch('Dashboard', '#dashboard-container');
+	Utility.Module.launch('Dashboard',  '#dashboard-container' );
+	Utility.Module.launch('Algorithms', '#algorithms-container');
+	Utility.Module.launch('Wallets',    '#wallets-container'   );
+
+	$(document).on('click', '.navbar-nav li',          $.proxy(changeTab,             this)                  );
 	$(document).on('click', '#sign-in-button',         $.proxy(onLoginButtonClick,    this)                  );
 	$(document).on('click', '#sign-up-button',         $.proxy(onRegisterButtonClick, this)                  );
 	$(document).on('click', '#login-x',                function(){$('#login-container').fadeOut();}          );
@@ -17,6 +21,25 @@ $(document).ready(function() {
 
 	$(document).on('click', '#sign-out-button',        $.proxy(onLogoutButtonClick,    this)                 );
 });
+
+function changeTab(evt) {
+	var tab     = $(evt.target).parents('li');
+	var tabText = tab.find('span').text();
+	$('.navbar li').removeClass('active');
+	tab.addClass('active');
+
+	$('.tab-container').hide();
+
+	if (tabText == 'Dashboard') {
+		$('#dashboard-container').show();
+	}
+	else if (tabText == 'Algorithms') {
+		$('#algorithms-container').show();
+	}
+	else if (tabText == 'Wallets') {
+		$('#wallets-container').show();
+	}
+}
 
 function onRegisterButtonClick(evt) {
 	$('#register-container').fadeIn();
@@ -82,13 +105,15 @@ function onLoginSuccess(response) {
 	$('#sign-out-button').toggle();
 	$('#edit-profile').toggle();
 	$('#welcome-message').toggle();
+	$('#algorithms-tab').toggle();
+	$('#wallets-tab').toggle();
 
 	$('#login-container').fadeOut();
 }
 
 function onLogoutButtonClick() {
 	$.ajax({
-		type:     'GET',
+		type:     'POST',
 		url:      '/user/logout',
 		success:  onLogoutSuccess,
 		dataType: 'json'
@@ -99,6 +124,8 @@ function onLogoutSuccess(response) {
 	if (!response || !response.success) {Utility.Alert.error(response.msg || 'There was an error logging out, please try again.');return;}
 	Utility.Alert.success('Successfully logged you out.');
 
+	$('#dashboard-tab').find('a').trigger('click');
+
 	$('#welcome-message').text('');
 	$('.fa-user-circle, .fa-caret-down').css('color', 'red');
 	$('#sign-in-button').toggle();
@@ -106,4 +133,6 @@ function onLogoutSuccess(response) {
 	$('#sign-out-button').toggle();
 	$('#edit-profile').toggle();
 	$('#welcome-message').toggle();
+	$('#algorithms-tab').toggle();
+	$('#wallets-tab').toggle();
 }

@@ -54,11 +54,14 @@
           <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
           <div class="collapse navbar-collapse navbar-ex1-collapse">
               <ul class="nav navbar-nav side-nav">
-                  <li>
-                      <a href="#"><i class="fa fa-fw fa-dashboard"></i>Dashboard</a>
+                  <li id="dashboard-tab" class="active">
+                      <a href="#"><i class="fa fa-fw fa-dashboard"></i><span>Dashboard</span></a>
                   </li>
-                  <li>
-                      <a href="#"><i class="fa fa-fw fa-pencil-square-o"></i>Algorithms</a>
+                  <li id="algorithms-tab" style="display: none;">
+                      <a href="#"><i class="fa fa-fw fa-pencil-square-o"></i><span>Algorithms</span></a>
+                  </li>
+                  <li id="wallets-tab" style="display: none;">
+                      <a href="#"><i class="fa fa-fw fa-dollar"></i><span>Wallets</span></a>
                   </li>
               </ul>
           </div>
@@ -68,12 +71,9 @@
       <hr>
 
       <div id="main-container">
-        <div id="dashboard-container"></div>
-        <!-- <div id="banner">
-          <div id="some-inspirational-saying">Everyday is a bank account, and time is our currency. No one is rich, no one is poor, we've got 24 hours each. --Christopher Rice</div>
-          <div id="a-fucking-moon"></div>
-          <div id="a-fucking-btc"></div>
-        </div> -->
+        <div id="dashboard-container" class="tab-container"></div>
+        <div id="algorithms-container" class="tab-container" style="display: none;"></div>
+        <div id="wallets-container" class="tab-container" style="display: none;"></div>
       </div>
 
       <hr>
