@@ -3,6 +3,18 @@ const User        = require('../controllers/user')
 const serializerr = require('serializerr')
 const utils       = require('../utils')
 
+// logout
+router.get('/logout', async function(req, res) {
+    req.session.destroy(function(err){
+        if(err){
+            res.status(500).json(serializerr(err))
+            return
+        } else {
+            utils.successTrue(res, null, 'Successfully logged out')
+        }
+    });
+})
+
 // params
 //   id - user id
 router.get('/:id', async function(req, res) {
@@ -17,17 +29,6 @@ router.get('/:id', async function(req, res) {
     }
 
     utils.successTrue(res, result, 'Successfully retrieved user')
-})
-
-// logout
-router.get('/logout', async function(req, res) {
-    req.session.destroy(function(err){
-        if(err){
-            console.log(err);
-        } else {
-            res.redirect('/');
-        }
-    });
 })
 
 // login
@@ -73,55 +74,6 @@ router.post('/register', async function(req, res) {
     if (result === false) {utils.successFalse(res, null, 'User already exists');return;}
 
     utils.successTrue(res, null, 'Successfully registered user')
-})
-
-// params
-//   id - user id
-router.post('/:id', async function(req, res) {
-    let result     = null
-    let jsonRecord = req.body.json_record
-
-    try {
-        result = await User.update(JSON.parse(jsonRecord))
-    }
-    catch(e) {
-        res.status(500).json(serializerr(e))
-        return
-    }
-
-    utils.successTrue(res, result, 'Successfully retrieved user')
-})
-
-// params
-//   id - user id
-router.delete('/:id', async function(req, res) {
-    let result = null
-
-    try {
-        result = await User.delete(req.params.id)
-    }
-    catch(e) {
-        res.status(500).json(serializerr(e))
-        return
-    }
-
-    utils.successTrue(res, result, 'Successfully deleted user')
-})
-
-// query params
-//   q - JSON object representing WHERE clause
-router.get('/', async function(req, res) {
-    let result = null
-
-    try {
-        result = await User.get(req.query.q)
-    }
-    catch(e) {
-        res.status(500).json(serializerr(e))
-        return
-    }
-
-    utils.successTrue(res, result, 'Successfully retrieved users')
 })
 
 module.exports = router

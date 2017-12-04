@@ -6,7 +6,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>Bitcoin</title>
+        <title>Cryp.to</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="shortcut" href="favicon.ico">
@@ -14,6 +14,7 @@
         <link rel="stylesheet" href="css/bootstrap.min.css">
         <link rel="stylesheet" href="css/bootstrap-theme.min.css">
         <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="css/font-awesome.min.css">
 
         <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
 
@@ -23,96 +24,135 @@
       <!--[if lt IE 8]>
           <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
       <![endif]-->
-        <nav class="navbar navbar-default">
-          <div class="container-fluid">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
+      <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+          <!-- Brand and toggle get grouped for better mobile display -->
+          <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                  <span class="sr-only">Toggle navigation</span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
               </button>
-              <a id="wallet" class="navbar-brand" href="#"></a>
-            </div>
+              <a class="navbar-brand" href="#">Cryp.to</a>
+          </div>
 
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-              <ul class="nav navbar-nav">
-                <li><a id="plus_minus" href="#">Test</a></li>
+          <!-- Top Menu Items -->
+          <ul class="nav navbar-right top-nav">
+              <div id="welcome-message" style="display: none;">Welcome my dude</div>
+              <li class="dropdown" style="margin-bottom: 10px;margin-right: 10px;margin-top: 10px;">
+                  <button type="button" class="dropdown-toggle btn" data-toggle="dropdown"><i class="fa fa-lg fa-user-circle" aria-hidden="true"></i><i class="fa fa-caret-down" style="margin-left: 5px;" aria-hidden="true"></i></button>
+                  <ul class="dropdown-menu">
+                      <li id="sign-in-button"><a href="#"><i class="fa fa-lg fa-sign-in"></i>Sign In</a></li>
+                      <li id="sign-up-button"><a href="#"><i class="fa fa-lg fa-edit"></i>Sign Up</a></li>
+                      <li id="edit-profile" style="display: none;"><a href="#"><i class="fa fa-lg fa-user"></i>Edit Profile</a></li>
+                      <li class="divider"></li>
+                      <li id="sign-out-button" style="display: none;"><a href="#"><i class="fa fa-lg fa-power-off"></i>Sign Out</a></li>
+                  </ul>
+              </li>
+          </ul>
+
+          <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
+          <div class="collapse navbar-collapse navbar-ex1-collapse">
+              <ul class="nav navbar-nav side-nav">
+                  <li>
+                      <a href="#"><i class="fa fa-fw fa-dashboard"></i>Dashboard</a>
+                  </li>
+                  <li>
+                      <a href="#"><i class="fa fa-fw fa-pencil-square-o"></i>Algorithms</a>
+                  </li>
               </ul>
-              <ul class="nav navbar-nav navbar-right">
-                <li><button id="config" class="btn btn-primary">Config</button><a id="log-line" href="#"></a></li>
-              </ul>
-            </div><!-- /.navbar-collapse -->
-          </div><!-- /.container-fluid -->
-        </nav>
-
-        <div style="width:100%;height:calc(100% - 150px);display: inline-block;">
-            <canvas id="myChart" style="width:100%;height:100%;"></canvas>
-        </div>
-
-        <div id="config-form" class="config-form">
-            <div class="form-group">
-              <label for="start"># Pts. to View:</label>
-              <input min="2" max="1440" type="number" style="width: 110px;display: inline-block;" class="form-control" id="start">
-            </div>
-            <div class="form-group">
-              <label for="main_average">Main Avg (Hrs.):</label>
-              <input min="2" max="168" type="number" style="width: 110px;display: inline-block;" class="form-control" id="main_average">
-              <button style="display: inline-block;" class="btn btn-primary btn-sm" id="update_main_avg">Update</button>
-            </div>
-            <div class="form-group">
-              <label for="smoothing_average">Smoothing Avg (Mins.):</label>
-              <input min="2" max="60" type="number" style="width: 110px;display: inline-block;" class="form-control" id="smoothing_average">
-              <button style="display: inline-block;" class="btn btn-primary btn-sm" id="update_smooth_avg">Update</button>
-            </div>
-            <div class="form-group">
-              <label for="resolution">Resolution (Mins.):</label>
-              <input min="1" max="1440" type="number" style="width: 110px;display: inline-block;" class="form-control" id="resolution">
-            </div>
-
-            <button id="backtest-button" class="btn btn-primary">Run Backtest</button>
-        </div>
-
-        <div id="floating-newsfeed">
-          <button id="newsfeed-expand-collapse">+</button>
-          <div id="newsfeed-container"></div>
-        </div>
-
-        <div id="transaction-row-container" style="display: none;">
-            <div class="transaction-row">
-                <div class="transaction-time transaction-line"></div>
-                <div class="transaction-line"><div class="transaction-label">Price:</div><div class="transaction-value transaction-price"></div></div>
-                <div class="transaction-line"><div class="transaction-label">Needed:</div><div class="transaction-value transaction-needed"></div></div>
-                <div class="transaction-line"><div class="transaction-label">Spent:</div><div class="transaction-value transaction-spent"></div></div>
-                <div style="display: none;" class="transaction-line"><div class="transaction-label">Sold:</div><div class="transaction-value transaction-sold"></div></div>
-                <div style="display: none;" class="transaction-line"><div class="transaction-label">ROI:</div><div class="transaction-value transaction-roi"></div></div>
-                <div style="display: none;" class="transaction-line"><div class="transaction-label">Time Active:</div><div class="transaction-value transaction-time-active"></div></div>
-            </div>
-        </div>
+          </div>
+          <!-- /.navbar-collapse -->
+      </nav>
 
       <hr>
 
-      <footer style="margin-left: 15px;">
+      <div id="main-container">
+        <div id="dashboard-container"></div>
+        <!-- <div id="banner">
+          <div id="some-inspirational-saying">Everyday is a bank account, and time is our currency. No one is rich, no one is poor, we've got 24 hours each. --Christopher Rice</div>
+          <div id="a-fucking-moon"></div>
+          <div id="a-fucking-btc"></div>
+        </div> -->
+      </div>
+
+      <hr>
+
+      <footer>
         <p>&copy; Burke Blazer 2017</p>
       </footer>
-    </div> <!-- /container -->        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.min.js"><\/script>')</script>
 
-        <script src="js/vendor/bootstrap.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/0.5.7/chartjs-plugin-annotation.min.js"></script>
-        <script src="js/main.js"></script>
+      <div id="login-container" style="display: none;">
+          <div id="login-form">
+            <button id="login-x" class="btn"><i class="fa fa-close" aria-hidden="true"></i></button>
 
-        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
-        <script>
-            (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
-            function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
-            e=o.createElement(i);r=o.getElementsByTagName(i)[0];
-            e.src='//www.google-analytics.com/analytics.js';
-            r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
-            ga('create','UA-XXXXX-X','auto');ga('send','pageview');
-        </script>
+            <div class="form-group">
+              <input class="form-control" id="login-email" placeholder="Email" name="email" type="email" required/>
+            </div>
+
+            <div class="form-group">
+              <input class="form-control" id="login-password" placeholder="Password" name="password" type="password" value="" required/>
+            </div>
+
+            <div class="form-group">
+              <input type="checkbox" name="remember" id="login-remember"/>
+              <label for="remember">&nbsp;Remember Me
+              </label>
+              <a href="#" id="forgot-password">Forgot Password</a>
+            </div>
+
+            <button id="login-register-button" class="login-buttons btn btn-info">Register</button>
+            <button type="button" id="login-submit-button"   class="login-buttons btn btn-primary">Submit</button>
+          </div>
+      </div>
+
+      <div id="register-container" style="display: none;">
+          <div id="register-form">
+            <button id="register-x" class="btn"><i class="fa fa-close" aria-hidden="true"></i></button>
+
+            <div class="form-group">
+              <input class="form-control" id="register-email" placeholder="Email" name="email" type="email" required/>
+            </div>
+
+            <div class="form-group">
+              <input class="form-control" id="register-password" placeholder="Password" name="password" type="password" value="" required/>
+            </div>
+
+            <div class="form-group">
+              <input class="form-control" id="register-confirm-password" placeholder="Confirm Password" name="confirm-password" type="password" value="" required/>
+            </div>
+
+            <div class="form-group">
+              <input class="form-control" id="register-first-name" placeholder="First Name" name="first-name" type="text" value="" required/>
+            </div>
+
+            <div class="form-group">
+              <input class="form-control" id="register-last-name" placeholder="Last Name" name="last-name" type="text" value="" required/>
+            </div>
+
+            <button type="button" id="register-submit-button"   class="login-buttons btn btn-primary">Submit</button>
+          </div>
+      </div>
+
+      <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+      <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.min.js"><\/script>')</script>
+
+      <script src="js/vendor/bootstrap.min.js"></script>
+      <script src="http://code.highcharts.com/stock/highstock.js"></script>
+      <script src="http://code.highcharts.com/stock/highcharts-more.js"></script>
+      <script src="js/vendor/secure-local-storage.min.js"></script>
+      <script src="js/vendor/bootbox.min.js"></script>
+      <script src="js/Utility.js"></script>
+      <script src="js/main.js"></script>
+
+      <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+      <script>
+          (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+          function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+          e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+          e.src='//www.google-analytics.com/analytics.js';
+          r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+          ga('create','UA-XXXXX-X','auto');ga('send','pageview');
+      </script>
     </body>
 </html>

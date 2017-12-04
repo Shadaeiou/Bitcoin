@@ -47,7 +47,7 @@
 		},
 
 		realign: function() {
-			var top = 0;
+			var top = 50;
 			for (var key in Utility.Alert.dialogs) {
 				if (Utility.Alert.dialogs.hasOwnProperty(key)) {
 					top += 5;

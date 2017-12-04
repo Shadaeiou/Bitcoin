@@ -1,8 +1,24 @@
 const express      = require('express')
-const path         = require('path')
 const app          = express()
+const session      = require('express-session');
+const redisStore   = require('connect-redis')(session);
+const redis        = require("redis")
+const client       = redis.createClient()
+const path         = require('path')
 const bodyParser   = require('body-parser')
 const _            = require('lodash')
+const webBase      = '../web/'
+
+client.on("error", function (err) {
+    console.log("Redis error: " + err)
+})
+
+app.use(session({
+    secret:            'porch children once food',
+    store:             new redisStore({host: 'localhost', port: 6379, client: client, ttl: 260}),
+    saveUninitialized: false,
+    resave:            false
+}))
 
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
@@ -14,8 +30,17 @@ app.listen(3000, function () {
 })
 
 function initRoutes() {
+	// Serve up the web directory static files
+	app.use(express.static('../web'));
+
+	// Serve up the main index
+	app.get('/', function (req, res) {
+		res.sendFile(path.resolve(webBase + 'index.html'))
+	})
+
 	const subrouters = [
-		'algorithm'
+		'algorithm',
+		'user'
 	]
 
 	_.each(subrouters, function(subroute_path) {

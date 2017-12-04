@@ -17,13 +17,20 @@
     "url": "https://github.com/Shadaeiou/Bitcoin/issues"
   },
   "dependencies": {
+    "bcrypt": "^1.0.3",
     "body-parser": "^1.18.2",
+    "coinbase": "^2.0.6",
+    "connect-redis": "^3.3.2",
     "express": "^4.16.2",
+    "express-session": "^1.15.6",
     "fs": "0.0.1-security",
+    "gdax": "github:coinbase/gdax-node",
     "lodash": "^4.17.4",
     "nodemon": "^1.12.1",
     "path": "^0.12.7",
     "pg-bricks": "^0.6.0",
+    "redis": "^2.8.0",
+    "redis-server": "^1.1.0",
     "safe-eval": "^0.3.0",
     "serializerr": "^1.0.3"
   }

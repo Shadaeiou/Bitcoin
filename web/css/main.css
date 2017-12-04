@@ -1,98 +1,277 @@
 th, td {
-	padding: 5px;
-	text-align: center;
+    padding:    5px;
+    text-align: center;
 }
 
-/* ==========================================================================
-   Author's custom styles
-   ========================================================================== */
 html, body {
-	width: 100%;
-	height: 100%;
+    width:            100%;
+    height:           100%;
+    background-color: #1a1a1a;
+    color:            #eee;
+    font-family:      Verdana;
+    font-size:        14px;
 }
 
-.transaction-row {
-	padding: 10px;
-	border-radius: 10px;
-	border: 1px solid black;
-	color: white;
-	margin-bottom: 5px;
-	font-size: 12px;
-	margin-left: calc(50% - 150px);
-	width: 300px;
-	text-align: center;
+hr {
+    margin-top:    0px;
+    margin-bottom: 0px;
+    border:        0;
+    border-top:    2px solid #777;
 }
 
-.transaction-time {
-	font-weight: bold;
-	font-size: 15px;
+footer {
+    background-color: #222;
+    height:           45px;
+    margin-top:       -12px;
+    padding-left:     15px;
+    padding-top:      0px;
 }
 
-.transaction-time {
-	margin-bottom: 5px;
+footer p {
+    margin-top:  12px;
+    padding-top: 12px;
 }
 
-.transaction-label {
-	font-weight: bold;
-	margin-right: 5px;
+.fa {
+    color: white;
 }
 
-.transaction-label, .transaction-value {
-	display: inline-block
+.fa-user-circle, .fa-caret-down {
+    color: red;
 }
 
-.transaction-line {
-	width: 275px;
+#main-navbar {
+    border:        none !important;
+    border-radius: 0px !important;
+    margin-bottom: 0px;
 }
 
-#log-line {
-	white-space: pre;
-    width: 300px;
+#main-container {
+    padding: 15px;
+    height:  calc(100% - 100px);
+}
+
+#main-navbar a {
+    color: #bbb !important;
+}
+
+.navbar-right a {
+    font-size: 13px !important;
+}
+
+.nav-link {
+    font-size: 16px;
+}
+
+/* Top Navigation */
+.top-nav {
+    padding: 0 15px;
+}
+
+.top-nav>li {
     display: inline-block;
+    float:   left;
 }
 
-#floating-newsfeed {
-	position: absolute;
-    top: 52px;
-    right: 0px;
-    height: calc(100% - 52px);
+.top-nav>li>a {
+    padding-top:    20px;
+    padding-bottom: 20px;
+    line-height:    20px;
+    color:          white;
 }
 
-#newsfeed-expand-collapse {
-	position: absolute;
-    left: -30px;
-	width: 30px;
-    height: 30px;
-    border-top-left-radius: 5px;
-    font-weight: bold;
-    font-size: 15px;
-    border-bottom-left-radius: 5px;
+.top-nav>li>a:hover,
+.top-nav>li>a:focus,
+.top-nav>.open>a,
+.top-nav>.open>a:hover,
+.top-nav>.open>a:focus {
+    color: white;
 }
 
-#newsfeed-container {
-	display: none;
-	padding: 5px;
-	overflow: scroll;
-	height: calc(100% - 52px);
+.top-nav>.open>.dropdown-menu {
+    min-width:               130px;
+    float:                   left;
+    position:                absolute;
+    margin-top:              0;
+    border-top-left-radius:  0;
+    border-top-right-radius: 0;
+    -webkit-box-shadow:      0 6px 12px rgba(0,0,0,.175);
+    box-shadow:              0 6px 12px rgba(0,0,0,.175);
 }
 
-#config {
-	display: inline-block;
+.top-nav>.open>.dropdown-menu>li>a {
+    white-space:  normal;
+    padding-left: 10px;
 }
 
-.config-form {
-	display: none;
-	width: 400px;
-	text-align: center;
-	padding: 15px;
+.top-nav>.open>.dropdown-menu .fa {
+    color: black;
+    width: 25px;
+}
+
+/* Side Navigation */
+@media(min-width:768px) {
+    .side-nav {
+        position:         fixed;
+        top:              55px;
+        left:             200px;
+        width:            200px;
+        margin-left:      -200px;
+        border:           none;
+        border-right:     1px solid black;
+        border-radius:    0;
+        overflow-y:       auto;
+        background-color: #222;
+        bottom:           0;
+        overflow-x:       hidden;
+        padding-bottom:   40px;
+    }
+
+    #main-container {
+        margin-top:  52px;
+        margin-left: 200px;
+    }
+
+    .side-nav>li>a {
+        width:         200px;
+        border-bottom: 1px rgba(0,0,0,.3) solid;
+    }
+
+    footer {
+        margin-left: 200px;
+    }
+
+    .side-nav li a:hover,
+    .side-nav li a:focus {
+        outline: none;
+    }
+}
+
+@media (max-width:768px) {
+    #main-container {
+        margin-top: 100px;
+    }
+}
+
+#welcome-message {
+    float: left;
+    margin-right: 15px;
+    margin-top: 17px;
+}
+
+.side-nav>li>ul {
+    padding:       0;
+    border-bottom: 1px rgba(0,0,0,.3) solid;
+}
+
+.side-nav>li>ul>li>a {
+    display:         block;
+    padding:         10px 15px 10px 38px;
+    text-decoration: none;
+}
+
+.side-nav {
+    color: white;
+}
+
+.navbar .nav > li > a {
+    padding-left: 10px;
+}
+
+.navbar .nav > li > a > i {
+    width: 35px;
+}
+
+.side-nav>li>ul>li>a:hover {
+    color: #fff;
+}
+
+.navbar .nav > li > a > .label {
+  -webkit-border-radius: 50%;
+  -moz-border-radius:    50%;
+  border-radius:         50%;
+  position:              absolute;
+  top:                   14px;
+  right:                 6px;
+  font-size:             10px;
+  font-weight:           normal;
+  min-width:             15px;
+  min-height:            15px;
+  line-height:           1.0em;
+  text-align:            center;
+  padding:               2px;
+}
+
+.navbar .nav > li > a:hover > .label {
+    top: 10px;
+}
+
+.navbar-brand {
+    padding: 15px 15px;
+    color:   white !important;
+}
+
+#login-container, #register-container {
+    background-color: rgba(0,0,0,.75);
+    width: 100%;
+    height: 100%;
     position: absolute;
-    z-index: 1001;
-    top: 53px;
-    border: 1px solid black;
-    right: 15px;
-    border-radius: 5px;
-    background-color: lightgray;
+    top: 0px;
+    z-index: 1030;
 }
 
+#login-form, #register-form {
+    padding-top: 25px !important;
+    position: absolute;
+    width: 250px;
+    height: 230px;
+    background-color: white;
+    top: calc(50% - 115px);
+    left: calc(50% - 125px);
+    padding: 15px;
+    border-radius: 10px;
+    color: black;
+    text-align: center;
+}
 
+#register-form {
+    height: 320px !important;
+    top: calc(50% - 160px) !important;
+}
 
+#forgot-password {
+    display: inline-block;
+    font-size: 11px;
+    text-decoration: underline;
+}
+
+#login-x, #register-x {
+    position: absolute;
+    top: 0px;
+    right: 5px;
+    padding: 0px;
+}
+
+#login-x i, #register-x i {
+    color: black;
+}
+
+.login-buttons {
+    position: absolute;
+    width: 100px;
+}
+
+#login-submit-button {
+    right: 20px;
+}
+
+#login-register-button {
+    left: 20px;
+}
+
+.alert {
+    position: absolute;
+    top: 5px;
+    z-index: 1030;
+    right: 5px;
+}
