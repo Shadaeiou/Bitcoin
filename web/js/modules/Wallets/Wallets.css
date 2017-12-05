@@ -1,0 +1,8 @@
+#wallets {
+	position: relative;
+}
+
+#wallets-crud-container {
+	position: absolute;
+	top:      45px;
+}

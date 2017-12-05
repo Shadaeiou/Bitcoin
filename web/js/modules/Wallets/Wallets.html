@@ -1,0 +1,27 @@
+<div class="Wallets" id="wallets">
+	<link rel="stylesheet" href="js/modules/Wallets/Wallets.css">
+
+    <h3 style="text-decoration:underline;font-family: Verdana;">Wallets</h3>
+
+    <div id="wallets-crud-container">
+        <button id="wallets-crud-add-button" type="button" class="btn btn-secondary">Add</button>
+    </div>
+	<table id="wallets-table" data-show-columns="true" data-height="250">
+        <thead>
+            <tr>
+                <th data-field="name"        data-sortable="true">Name</th>
+                <th data-field="broker_name" data-sortable="true">Broker</th>
+                <th data-field="balance"     data-sortable="true">Balance</th>
+            </tr>
+        </thead>
+    </table>
+
+    <div id="wallets-add-wallet-container" style="display: none;">
+        <div id="wallets-add-wallet">
+            <input type="text" placeholder="Name"></div>
+            <input type="text" placeholder="Name"></div>
+        </div>
+    </div>
+
+	<script src="js/modules/Wallets/Wallets.js"></script>
+</div>

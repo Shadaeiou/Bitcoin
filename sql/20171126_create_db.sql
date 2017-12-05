@@ -21,7 +21,7 @@ CREATE TABLE broker (
 INSERT INTO broker (name) VALUES ('Private'), ('Coinbase');
 
 CREATE TABLE user_broker (
-	account_id SERIAL PRIMARY KEY,
+	user_broker_id SERIAL PRIMARY KEY,
 	broker_id  INT REFERENCES broker,
 	user_id    uuid REFERENCES "user",
 	config     TEXT

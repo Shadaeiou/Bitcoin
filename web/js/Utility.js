@@ -74,9 +74,10 @@
 			});
 		},
 
-		prompt: function(msg, callback, defaultValue) {
+		prompt: function(title, msg, callback, defaultValue) {
 			if (msg instanceof $) {msg = msg.html();}
 			return bootbox.prompt({
+				title: title,
 				message: '<form>'+msg+'</form>',
 				value: defaultValue || '',
 				buttons: {
@@ -87,7 +88,8 @@
 					cancel: {
 						label: 'Cancel'
 					}
-				}
+				},
+				callback: callback
 			});
 		},
 

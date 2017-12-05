@@ -26,6 +26,7 @@
     "fs": "0.0.1-security",
     "gdax": "github:coinbase/gdax-node",
     "lodash": "^4.17.4",
+    "moment": "^2.19.3",
     "nodemon": "^1.12.1",
     "path": "^0.12.7",
     "pg-bricks": "^0.6.0",

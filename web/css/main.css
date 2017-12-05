@@ -32,6 +32,23 @@ footer p {
     padding-top: 12px;
 }
 
+.tab-container {
+    height: 100%;
+    width: 100%;
+}
+
+.btn-secondary {
+    color: black;
+}
+
+.modal-header {
+    color: black;
+}
+
+.table-hover>tbody>tr:hover {
+    background-color: #333 !important;
+}
+
 .active {
     font-weight: bolder;
 }

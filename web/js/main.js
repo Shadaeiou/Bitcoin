@@ -20,6 +20,11 @@ $(document).ready(function() {
 	$(document).on('keyup', '#register-last-name',     function(evt) {if (evt.keyCode == 13) {onRegister();}});
 
 	$(document).on('click', '#sign-out-button',        $.proxy(onLogoutButtonClick,    this)                 );
+
+	// Auto login
+	$('#login-email').val('burke.blazer@gmail.com');
+	$('#login-password').val('bblazer');
+	onLogin();
 });
 
 function changeTab(evt) {
@@ -38,6 +43,7 @@ function changeTab(evt) {
 	}
 	else if (tabText == 'Wallets') {
 		$('#wallets-container').show();
+		$('#wallets-container').data('Wallets').activate();
 	}
 }
 
