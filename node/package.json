@@ -26,13 +26,16 @@
     "fs": "0.0.1-security",
     "gdax": "github:coinbase/gdax-node",
     "lodash": "^4.17.4",
-    "moment": "^2.19.3",
+    "moment": "^2.19.4",
+    "momentjs": "^2.0.0",
+    "nodemailer": "^4.4.1",
     "nodemon": "^1.12.1",
     "path": "^0.12.7",
     "pg-bricks": "^0.6.0",
     "redis": "^2.8.0",
     "redis-server": "^1.1.0",
-    "safe-eval": "^0.3.0",
-    "serializerr": "^1.0.3"
+    "sendmail": "^1.2.0",
+    "serializerr": "^1.0.3",
+    "vm2": "^3.5.2"
   }
 }

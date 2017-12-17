@@ -22,6 +22,7 @@ INSERT INTO broker (name) VALUES ('Private'), ('Coinbase');
 
 CREATE TABLE user_broker (
 	user_broker_id SERIAL PRIMARY KEY,
+	name       TEXT NOT NULL,
 	broker_id  INT REFERENCES broker,
 	user_id    uuid REFERENCES "user",
 	config     TEXT
@@ -31,7 +32,9 @@ CREATE TABLE user_wallet (
 	user_wallet_id SERIAL PRIMARY KEY,
 	name           varchar(40) NOT NULL CHECK (name <> ''),
 	user_broker_id INT REFERENCES user_broker,
+	sandbox        BOOLEAN default TRUE,
 	balance        MONEY,
+	currency_id    INT REFERENCES currency,
 	status         boolean DEFAULT FALSE,
 	created        timestamp DEFAULT NOW(),
 	modified       timestamp DEFAULT NOW()
@@ -57,12 +60,27 @@ CREATE TABLE currency_price_point (
 );
 
 CREATE TABLE algorithm (
-	algorithm_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
-	name         varchar(40) NOT NULL CHECK (name <> ''),
-	text         TEXT NOT NULL,
-	user_id      uuid REFERENCES "user",
-	sandbox      boolean default true,
-	status       boolean DEFAULT FALSE,
-	created      timestamp DEFAULT NOW(),
-	modified     timestamp DEFAULT NOW()
+	algorithm_id   uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+	name           varchar(40) NOT NULL CHECK (name <> ''),
+	text           TEXT,
+	run_frequency  TEXT DEFAULT '-1';
+	user_wallet_id INT REFERENCES user_wallet,
+	user_id        uuid REFERENCES "user",
+	status         boolean DEFAULT FALSE,
+	created        timestamp DEFAULT NOW(),
+	modified       timestamp DEFAULT NOW()
+);
+
+CREATE TABLE user_wallet_transaction (
+	user_wallet_transaction_id SERIAL PRIMARY KEY,
+	user_wallet_id             INT REFERENCES user_wallet,
+	buy_price                  MONEY NOT NULL,
+	price_needed               MONEY NOT NULL,
+	amount                     float8 NOT NULL,
+	unix_time_bought           BIGINT NOT NULL,
+	money_spent                MONEY NOT NULL,
+	sell_price                 MONEY,
+	unix_time_sold             BIGINT,
+	money_sold                 MONEY,
+	active                     BOOLEAN DEFAULT TRUE
 );

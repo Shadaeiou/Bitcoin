@@ -4,5 +4,39 @@
 
 #wallets-crud-container {
 	position: absolute;
-	top:      45px;
+	top:      10px;
+}
+
+#selected-user-broker {
+	display:    block;
+    margin-top: 5px;
+}
+
+#selected-broker {
+	display:    block;
+    margin-top: 5px;
+}
+
+#wallets-add-wallet input {
+	width: 250px;
+}
+
+#wallets-add-wallet select {
+	width:  250px;
+    height: 35px;
+}
+
+#wallets-add-user-broker input {
+	width: 250px;
+}
+
+#wallets-add-user-broker select {
+	width:  250px;
+    height: 35px;
+}
+
+#selected-broker-config {
+	display: block;
+	width:   250px;
+    height:  125px;
 }

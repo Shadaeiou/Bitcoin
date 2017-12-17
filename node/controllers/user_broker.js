@@ -14,7 +14,10 @@ class UserBroker {
     }
 
     async getByID(id) {
-        return await db.select().from('user_broker').where({user_broker_id: id}).row()
+        var userBroker = await db.select().from('user_broker').where({user_broker_id: id}).row()
+        var broker     = await Broker.getByID(userBroker.broker_id)
+        userBroker.broker_name = broker.name
+        return userBroker
     }
 
     async insert(record) {

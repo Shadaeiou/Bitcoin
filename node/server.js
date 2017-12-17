@@ -41,7 +41,9 @@ function initRoutes() {
 	const subrouters = [
 		'algorithm',
 		'user',
-		'wallet'
+		'wallet',
+		'broker',
+		'user_broker'
 	]
 
 	_.each(subrouters, function(subroute_path) {

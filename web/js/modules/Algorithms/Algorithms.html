@@ -1,21 +1,39 @@
 <div class="Algorithms" id="algorithms">
 	<link rel="stylesheet" href="js/modules/Algorithms/Algorithms.css">
 
-	<h3 style="text-decoration:underline;font-family: Verdana;">Algorithms</h3>
+	<div id="algorithms-main-container">
+		<div class="dropdown">
+			<button class="btn btn-default dropdown-toggle" type="button" id="tools-dropdown" data-toggle="dropdown" aria-expanded="true">
+				Tools
+				<span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu" role="menu" aria-labelledby="tools-dropdown">
+				<li role="presentation"><a id="algorithms-add"      role="menuitem" tabindex="-1" href="#">Add</a></li>
+				<li role="presentation"><a id="algorithms-save"     role="menuitem" tabindex="-1" href="#">Save</a></li>
+				<li role="presentation"><a id="algorithms-delete"   role="menuitem" tabindex="-1" href="#">Delete</a></li>
+			</ul>
+		</div>
 
-	<div class="dropdown">
-		<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-			Dropdown
-			<span class="caret"></span>
-		</button>
-		<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-			<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>
-			<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>
-			<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
-			<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>
-		</ul>
+		<div class="form-group" id="algorithm-run-frequency-form">
+			<label for="algorithm-run-frequency">Run Frequency:</label>
+			<select id="algorithm-run-frequency">
+				<option value="-1">Manual</option>
+				<option value="1">1 Minute</option>
+				<option value="5">5 Minute</option>
+				<option value="15">15 Minute</option>
+				<option value="30">30 Minute</option>
+				<option value="60">1 Hour</option>
+				<option value="360">6 Hours</option>
+				<option value="720">Twice a day</option>
+				<option value="1440">Once a day</option>
+			</select>
+		</div>
+
+		<button id="run-algorithm-button" class="btn btn-default">Run</button>
+
+		<div id="algorithms-editor"></div>
+		<div id="algorithms-selector"></div>
 	</div>
-	<div id="editor"></div>
 
 	<script src="js/modules/Algorithms/Algorithms.js"></script>
 </div>

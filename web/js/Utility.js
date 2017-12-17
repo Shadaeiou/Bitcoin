@@ -93,6 +93,25 @@
 			});
 		},
 
+		dialog: function(title, msg, callback, defaultValue) {
+			if (msg instanceof $) {msg = msg.html();}
+			return bootbox.dialog({
+				title: title,
+				message: '<form>'+msg+'</form>',
+				value: defaultValue || '',
+				buttons: {
+					confirm: {
+						label: 'OK',
+						callback: callback
+					},
+					cancel: {
+						label: 'Cancel'
+					}
+				},
+				callback: callback
+			});
+		},
+
 		confirm: function(header, msg, callback, confirmText, cancelText) {
 			if (msg instanceof $) {msg = msg.html();}
 			return bootbox.confirm({
@@ -109,6 +128,53 @@
 				},
 				callback: callback
 			});
+		}
+	};
+
+	Utility.Data = {
+		cache:  {},
+		events: {},
+		success: function(response, callback, cache, type, fullResponse) {
+			if (!response || !response.success) {Utility.Alert.error(response.msg || 'There was an error, please try again.');return;}
+
+			this.cache[cache] = response;
+
+			if (fullResponse) {callback(response);     }
+			else              {callback(response.data);}
+
+			type = type.toLowerCase();
+			cache = cache.split('/')[0];
+			if (!this.events[cache] || !this.events[cache][type]) {return;}
+			for (var ct = 0; ct < this.events[cache][type].length; ct++) {
+				this.events[cache][type][ct].call();
+			}
+		},
+		initCall: function(callback, endPoint, type, data, fullResponse, refreshCache) { 
+			if (!refreshCache && this.cache[endPoint]) {if (fullResponse) {callback(this.cache[endPoint]);} else {callback(this.cache[endPoint]['data']);}return;}
+			if (!type)                                 {type = 'GET';}
+
+			$.ajax({
+				type:     type,
+				url:      '/'+endPoint,
+				data:     data,
+				success:  function(response) {Utility.Data.success(response, callback, endPoint, type, fullResponse)},
+				dataType: 'json'
+			});
+		},
+		on: function(action, endPoint, callback) {
+			action = action.toLowerCase();
+			if (!this.events[endPoint])         {this.events[endPoint]         = {};}
+			if (!this.events[endPoint][action]) {this.events[endPoint][action] = [];}
+			this.events[endPoint][action].push(callback);
+		},
+		get: function(endPoint, callback, fullResponse, refreshCache) {
+			this.initCall(callback, endPoint, 'GET', null, fullResponse, refreshCache);
+		},
+		post: function(endPoint, callback, data, fullResponse) {
+			this.initCall(callback, endPoint, 'POST', data, fullResponse, true);
+		},
+		delete: function(endPoint, callback, fullResponse) {
+			this.initCall(callback, endPoint, 'DELETE', null, fullResponse, true);
 		}
 	};
 }(window.Utility = window.Utility || {}));

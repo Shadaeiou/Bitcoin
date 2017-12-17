@@ -1,8 +1,6 @@
 <div class="Wallets" id="wallets">
 	<link rel="stylesheet" href="js/modules/Wallets/Wallets.css">
 
-    <h3 style="text-decoration:underline;font-family: Verdana;">Wallets</h3>
-
     <div id="wallets-crud-container">
         <button id="wallets-crud-add-button" type="button" class="btn btn-secondary">Add</button>
     </div>
@@ -16,10 +14,41 @@
         </thead>
     </table>
 
+    <div id="wallets-add-user-broker-container" style="display: none;">
+        <div id="wallets-add-user-broker">
+
+            <div class="form-group">
+                <label for="user-broker-name">Name</label>
+                <input type="text" class="form-control" id="user-broker-name">
+            </div>
+
+            <div class="form-group">
+                <label for="selected-broker">Broker</label>
+                <select id="selected-broker"></select>
+            </div>
+
+            <div class="form-group">
+                <label for="selected-broker-config">Config</label>
+                <textarea id="selected-broker-config"></textarea>
+            </div>
+
+        </div>
+    </div>
+
     <div id="wallets-add-wallet-container" style="display: none;">
         <div id="wallets-add-wallet">
-            <input type="text" placeholder="Name"></div>
-            <input type="text" placeholder="Name"></div>
+
+            <div class="form-group">
+                <label for="wallet-name">Name</label>
+                <input type="text" class="form-control" id="wallet-name">
+            </div>
+
+            <div class="form-group">
+                <label for="wallets-add-user-broker-button">User Broker</label>
+                <button type="button" id="wallets-add-user-broker-button" class="btn btn-primary">Add</button>
+                <select id="selected-user-broker"></select>
+            </div>
+
         </div>
     </div>
 

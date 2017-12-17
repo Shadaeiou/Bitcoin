@@ -32,6 +32,10 @@ footer p {
     padding-top: 12px;
 }
 
+.bootbox-body {
+    color: black;
+}
+
 .tab-container {
     height: 100%;
     width: 100%;
@@ -293,6 +297,6 @@ footer p {
 .alert {
     position: absolute;
     top: 5px;
-    z-index: 1030;
+    z-index: 1041;
     right: 5px;
 }
