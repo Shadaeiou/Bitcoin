@@ -28,6 +28,7 @@
     "lodash": "^4.17.4",
     "moment": "^2.19.4",
     "momentjs": "^2.0.0",
+    "node-schedule": "^1.2.5",
     "nodemailer": "^4.4.1",
     "nodemon": "^1.12.1",
     "path": "^0.12.7",
@@ -36,6 +37,8 @@
     "redis-server": "^1.1.0",
     "sendmail": "^1.2.0",
     "serializerr": "^1.0.3",
+    "socket-io": "^1.0.0",
+    "socket.io": "^2.0.4",
     "vm2": "^3.5.2"
   }
 }

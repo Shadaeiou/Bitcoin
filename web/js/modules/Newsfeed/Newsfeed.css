@@ -1,0 +1,31 @@
+#newsfeed-container {
+	position:                  absolute;
+    height:                    calc(100% - 55px);
+    top:                       55px;
+    width:                     300px;
+    right:                     0px;
+    background-color:          black;
+    border:                    1px solid white;
+    padding:                   10px;
+    border-top-left-radius:    10px;
+    border-bottom-left-radius: 10px;
+}
+
+#newsfeed-expand-collapse-button {
+	cursor:                    pointer;
+	height:                    50px;
+    width:                     50px;
+    position:                  absolute;
+    top:                       35px;
+    left:                      -50px;
+    background-color:          black;
+    border-top-left-radius:    10px;
+    border-bottom-left-radius: 10px;
+    border:                    1px solid white;
+    border-right:              1px solid black;
+}
+
+#newsfeed-expand-collapse-button i {
+	margin-left: 19px;
+    margin-top:  18px;
+}

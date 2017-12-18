@@ -5,8 +5,10 @@ $(document).ready(function() {
 	Utility.Module.launch('Dashboard',  '#dashboard-container' );
 	Utility.Module.launch('Algorithms', '#algorithms-container');
 	Utility.Module.launch('Wallets',    '#wallets-container'   );
+	Utility.Module.launch('Newsfeed',   '#newsfeed-container'  );
 
 	$(document).on('click', '.navbar-nav li',          $.proxy(changeTab,             this)                  );
+	$(document).on('click', '#collapse-menu',          $.proxy(collapseMenu,          this)                  );
 	$(document).on('click', '#sign-in-button',         $.proxy(onLoginButtonClick,    this)                  );
 	$(document).on('click', '#sign-up-button',         $.proxy(onRegisterButtonClick, this)                  );
 	$(document).on('click', '#login-x',                function(){$('#login-container').fadeOut();}          );
@@ -26,6 +28,26 @@ $(document).ready(function() {
 	$('#login-password').val('bblazer');
 	onLogin();
 });
+
+function collapseMenu() {
+	$('.navbar-nav').toggle();
+	if ($('#collapse-menu i').hasClass('fa-arrow-left')) {
+		$('#collapse-menu i').removeClass('fa-arrow-left');
+		$('#collapse-menu i').addClass('fa-arrow-right');
+		$('#collapse-menu').removeClass('collapse-me');
+		$('#collapse-menu').addClass('expand-me');
+		$('#main-container').css('marginLeft', '0px');
+		$('footer').css('marginLeft', '45px');
+	}
+	else {
+		$('#collapse-menu i').removeClass('fa-arrow-right');
+		$('#collapse-menu i').addClass('fa-arrow-left');
+		$('#collapse-menu').removeClass('expand-me');
+		$('#collapse-menu').addClass('collapse-me');
+		$('#main-container').css('marginLeft', '200px');
+		$('footer').css('marginLeft', '200px');
+	}
+}
 
 function changeTab(evt) {
 	var tab     = $(evt.target).parents('li');
@@ -113,8 +135,15 @@ function onLoginSuccess(response) {
 	$('#welcome-message').toggle();
 	$('#algorithms-tab').toggle();
 	$('#wallets-tab').toggle();
+	$('#newsfeed-container').toggle();
 
 	$('#login-container').fadeOut();
+
+	var io = window.io();
+	$(document).data('socket.io', io);
+	io.on('new_price', function(msg){
+		console.log(msg)
+    });
 }
 
 function onLogoutButtonClick() {

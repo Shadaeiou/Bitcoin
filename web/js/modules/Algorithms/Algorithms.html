@@ -2,15 +2,17 @@
 	<link rel="stylesheet" href="js/modules/Algorithms/Algorithms.css">
 
 	<div id="algorithms-main-container">
+		<select id="algorithms-selector"></select>
+
 		<div class="dropdown">
 			<button class="btn btn-default dropdown-toggle" type="button" id="tools-dropdown" data-toggle="dropdown" aria-expanded="true">
 				Tools
 				<span class="caret"></span>
 			</button>
 			<ul class="dropdown-menu" role="menu" aria-labelledby="tools-dropdown">
-				<li role="presentation"><a id="algorithms-add"      role="menuitem" tabindex="-1" href="#">Add</a></li>
-				<li role="presentation"><a id="algorithms-save"     role="menuitem" tabindex="-1" href="#">Save</a></li>
-				<li role="presentation"><a id="algorithms-delete"   role="menuitem" tabindex="-1" href="#">Delete</a></li>
+				<li role="presentation">                       <a id="algorithms-add"      role="menuitem" tabindex="-1" href="#">Add</a></li>
+				<li role="presentation"><a style="display: none;" id="algorithms-save"     role="menuitem" tabindex="-1" href="#">Update</a></li>
+				<li role="presentation"><a style="display: none;" id="algorithms-delete"   role="menuitem" tabindex="-1" href="#">Delete</a></li>
 			</ul>
 		</div>
 
@@ -29,10 +31,9 @@
 			</select>
 		</div>
 
-		<button id="run-algorithm-button" class="btn btn-default">Run</button>
+		<button id="run-algorithm-button" class="btn btn-default">Run Now</button>
 
 		<div id="algorithms-editor"></div>
-		<div id="algorithms-selector"></div>
 	</div>
 
 	<script src="js/modules/Algorithms/Algorithms.js"></script>

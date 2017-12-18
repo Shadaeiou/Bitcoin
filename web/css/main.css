@@ -10,6 +10,7 @@ html, body {
     color:            #eee;
     font-family:      Verdana;
     font-size:        14px;
+    overflow:         hidden;
 }
 
 hr {
@@ -72,8 +73,8 @@ footer p {
 }
 
 #main-container {
-    padding: 15px;
-    height:  calc(100% - 100px);
+    /*padding: 15px;*/
+    height:  calc(100% - 101px);
 }
 
 #main-navbar a {
@@ -82,6 +83,12 @@ footer p {
 
 .navbar-right a {
     font-size: 13px !important;
+}
+
+.navbar-right {
+    width:   278px;
+    display: inline-block;
+    float:   right;
 }
 
 .nav-link {
@@ -173,9 +180,67 @@ footer p {
 }
 
 @media (max-width:768px) {
-    #main-container {
-        margin-top: 100px;
+    .side-nav {
+        position:         fixed;
+        top:              49px;
+        left:             200px;
+        width:            55px;
+        margin-left:      -200px;
+        border:           none;
+        border-right:     1px solid black;
+        border-radius:    0;
+        overflow-y:       auto;
+        background-color: #222;
+        bottom:           0;
+        overflow-x:       hidden;
+        padding-bottom:   40px;
+        height:           calc(100% - 58px);
     }
+
+    .side-nav span {
+        display: none;
+    }
+
+    #collapse-menu {
+        display: none;
+    }
+
+    #main-container {
+        margin-top:  52px;
+        margin-left: 55px;
+        height:      calc(100% - 102px);
+    }
+
+    footer {
+        margin-left: 55px;
+    }
+}
+
+#collapse-menu {
+    cursor:           pointer;
+    width:            47px;
+    height:           47px;
+    position:         absolute;
+    text-align:       center;
+    z-index:          1030;
+    padding-top:      11px;
+    background-color: #222;
+}
+
+.expand-me {
+    bottom:       0px;
+    left:         0px;
+    border-top:   2px solid gray;
+    border-left:  2px solid gray;
+    border-right: 2px solid gray;
+}
+
+.collapse-me {
+    bottom:       0px;
+    left:         153px;
+    border-top:   2px solid gray;
+    border-left:  2px solid gray;
+    border-right: 2px solid gray;
 }
 
 #welcome-message {
@@ -234,6 +299,11 @@ footer p {
 .navbar-brand {
     padding: 15px 15px;
     color:   white !important;
+}
+
+.navbar-header {
+    width:   100px;
+    display: inline-block;
 }
 
 #login-container, #register-container {

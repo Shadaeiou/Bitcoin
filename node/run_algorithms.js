@@ -17,5 +17,4 @@ class RunAlgorithms {
     }
 }
 
-let runAlgorithms = new RunAlgorithms()
-runAlgorithms.run()
+module.exports = new RunAlgorithms()

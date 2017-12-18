@@ -7,6 +7,7 @@ const Currency    = require('./currency')
 const nodemailer  = require('nodemailer')
 const fs          = require("fs")
 const pw          = fs.readFileSync('/etc/ni/gmail_pw.txt').toString().trim()
+const fromEmail   = 'burke.blazer@gmail.com'
 
 class Wallet {
     async get(wheres) {
@@ -87,17 +88,17 @@ class Wallet {
             secure:     false,
             requireTLS: true,
             auth: {
-                user: "burke.blazer@gmail.com",
+                user: fromEmail,
                 pass: pw
             }
         });
 
         // setup e-mail data with unicode symbols
         var mailOptions = {
-            from:    "Burke Blazer<burke.blazer@gmail.com>",
+            from:    fromEmail,
             to:      "burke.blazer@gmail.com",
-            subject: "User wallet "+wallet.name + " bought $"+amount,
-            text:    "User wallet: "+wallet.name+"\nBuy price: "+pricePaid+"\nPrice needed: "+priceNeeded+"\nAmount: "+response.bought+"\nMoney spent: $"+moneySpent+"\nBalance before: "+before+"\nBalance after: "+after
+            subject: "Cryp.to "+wallet.name + " bought $"+amount+' of '+wallet.currency_full_name,
+            text:    wallet.currency_full_name+" bought: "+response.bought+"\nMoney spent: $"+moneySpent+"\nBuy price: "+pricePaid+"\nPrice needed: "+priceNeeded+"\nBalance before: "+before+"\nBalance after: "+after
         }
 
         // send mail with defined transport object

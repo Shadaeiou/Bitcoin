@@ -30,7 +30,7 @@ class Algorithms {
 	    this.$el    .on('click',  '#algorithms-add',          $.proxy(this.onAddAlgorithmsButtonClick,    this));
 	    this.$el    .on('click',  '#algorithms-delete',       $.proxy(this.onDeleteAlgorithmsButtonClick, this));
 	    this.$el    .on('click',  '#algorithms-save',         $.proxy(this.onSaveAlgorithmsButtonClick,   this));
-	    this.$el    .on('click',  '.algorithm-button',        $.proxy(this.onAlgorithmButtonClick,        this));
+	    this.$el    .on('change', '#algorithms-selector',     $.proxy(this.onAlgorithmButtonClick,        this));
 	    this.$el    .on('click',  '#run-algorithm-button',    $.proxy(this.onRunButtonClick,              this));
 	    this.$el    .on('change', '#algorithm-run-frequency', $.proxy(this.onAlgorithmSelect,             this));
 	    Utility.Data.on('post',   'algorithm',                $.proxy(function() {Utility.Data.get('algorithm', $.proxy(this.onGetAlgorithmsSuccess, this), null, true);},this));
@@ -79,13 +79,15 @@ class Algorithms {
 	}
 
 	onAlgorithmButtonClick(evt) {
-		this.$el.find('.algorithm-button').removeClass('btn-default').removeClass('btn-primary').addClass('btn-default');
-		var $button = $(evt.target);
-		$button.removeClass('btn-default').addClass('btn-primary');
-		this.currentAlgorithm = $button.data('algorithmData');
+		var $option = $(evt.target).find('option:selected');
+
+		this.currentAlgorithm = $option.data('algorithmData');
 		this.$el.find('#algorithm-run-frequency').val(this.currentAlgorithm.run_frequency);
 
-		this.$el.data('algorithms-editor').setValue($button.data('algorithmData').text || '', -1);
+		this.$el.data('algorithms-editor').setValue($option.data('algorithmData').text || '', -1);
+
+		this.$el.find('#algorithms-delete').show();
+		this.$el.find('#algorithms-save').show();
 	}
 
 	onAddAlgorithmsButtonClick() {
@@ -110,9 +112,9 @@ class Algorithms {
 		this.$el.data('algorithms-editor').setValue('');
 		$selector.empty();
 		for (var ct = 0; ct < data.length; ct++) {
-			$selector.append($('<button class="algorithm-button btn btn-default">').text(data[ct].name).data('algorithmData', data[ct]));
+			$selector.append($('<option>').text(data[ct].name).data('algorithmData', data[ct]));
 		}
-		if ($selector.find('button').length) {$($selector.find('button')[0]).trigger('click');}
+		if ($selector.find('option').length) {$selector.trigger('change');}
 	}
 }
 

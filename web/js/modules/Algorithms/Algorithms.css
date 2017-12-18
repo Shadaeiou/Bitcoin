@@ -11,40 +11,37 @@
 
 #algorithms-editor {
     margin-top: 10px;
-    height:     calc(100% - 40px);
-    width:      calc(75% - 20px);
+    height:     calc(100% - 44px);
+    width:      100%;
     display:    inline-block;
+    border:     1px solid black;
 }
 
 #algorithms-selector {
-    margin-top:    10px;
-    height:        calc(100% - 40px);
-    width:         25%;
-    display:       inline-block;
-    margin-left:   10px;
-    border:        1px solid white;
-    border-radius: 10px;
-    float:         right;
-    padding:       10px;
+    position: absolute;
+    left:     10px;
+    top:      7px;
+    height:   30px;
+    width:    110px;
+    color:    black;
 }
 
-#algorithms-selector button {
-    width:         100%;
-    height:        50px;
-    font-size:     20px;
-    margin-bottom: 5px;
+#algorithms-main-container .dropdown {
+    left:  125px;
+    top:   5px;
+    width: 100px;
 }
 
 #run-algorithm-button {
     position: absolute;
-    top:      0px;
-    left:     85px;
+    top:      5px;
+    left:     205px;
 }
 
 #algorithm-run-frequency-form {
     position:    absolute;
-    top:         2px;
-    left:        145px;
+    top:         7px;
+    left:        295px;
     margin-left: 5px;
 }
 
