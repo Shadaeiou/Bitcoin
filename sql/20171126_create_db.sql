@@ -23,6 +23,7 @@ INSERT INTO broker (name) VALUES ('Private'), ('Coinbase');
 CREATE TABLE user_broker (
 	user_broker_id SERIAL PRIMARY KEY,
 	name       TEXT NOT NULL,
+	sandbox    BOOLEAN,
 	broker_id  INT REFERENCES broker,
 	user_id    uuid REFERENCES "user",
 	config     TEXT
@@ -32,8 +33,7 @@ CREATE TABLE user_wallet (
 	user_wallet_id SERIAL PRIMARY KEY,
 	name           varchar(40) NOT NULL CHECK (name <> ''),
 	user_broker_id INT REFERENCES user_broker,
-	sandbox        BOOLEAN default TRUE,
-	balance        MONEY,
+	balance        float8 NOT NULL,
 	currency_id    INT REFERENCES currency,
 	status         boolean DEFAULT FALSE,
 	created        timestamp DEFAULT NOW(),
@@ -43,12 +43,14 @@ CREATE TABLE user_wallet (
 CREATE TABLE currency (
 	currency_id SERIAL PRIMARY KEY,
 	name        varchar(40) NOT NULL CHECK (name <> ''),
-	full_name   varchar(40) NOT NULL CHECK (full_name <> '')
+	full_name   varchar(40) NOT NULL CHECK (full_name <> ''),
+	type        varchar(20)
 );
 
-INSERT INTO currency (name, full_name) VALUES ('btc', 'Bitcoin');
-INSERT INTO currency (name, full_name) VALUES ('eth', 'Ethereum');
-INSERT INTO currency (name, full_name) VALUES ('ltc', 'Litecoin');
+INSERT INTO currency (name, full_name, type) VALUES ('btc', 'Bitcoin', 'crypto');
+INSERT INTO currency (name, full_name, type) VALUES ('eth', 'Ethereum', 'crypto');
+INSERT INTO currency (name, full_name, type) VALUES ('ltc', 'Litecoin', 'crypto');
+INSERT INTO currency (name, full_name, type) VALUES ('$', 'USD', 'fund');
 
 CREATE TABLE currency_price_point (
 	currency_price_point_id SERIAL PRIMARY KEY,
@@ -60,15 +62,39 @@ CREATE TABLE currency_price_point (
 );
 
 CREATE TABLE algorithm (
-	algorithm_id   uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
-	name           varchar(40) NOT NULL CHECK (name <> ''),
-	text           TEXT,
-	run_frequency  TEXT DEFAULT '-1';
-	user_wallet_id INT REFERENCES user_wallet,
-	user_id        uuid REFERENCES "user",
-	status         boolean DEFAULT FALSE,
-	created        timestamp DEFAULT NOW(),
-	modified       timestamp DEFAULT NOW()
+	algorithm_id          uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+	name                  varchar(40) NOT NULL CHECK (name <> ''),
+	text                  TEXT,
+	run_frequency         TEXT DEFAULT '-1';
+	fund_user_wallet_id   INT REFERENCES user_wallet,
+	crypto_user_wallet_id INT REFERENCES user_wallet,
+	user_id               uuid REFERENCES "user",
+	status                boolean DEFAULT FALSE,
+	created               timestamp DEFAULT NOW(),
+	modified              timestamp DEFAULT NOW()
+);
+
+CREATE TABLE notification_type (
+	notification_type_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+	name                      TEXT,
+	abbr                      TEXT,
+	status                    BOOLEAN DEFAULT TRUE
+);
+
+INSERT INTO notification_type (name, abbr) VALUES 
+('Buy',  'buy'),
+('Sell', 'sell'),
+('Fund', 'fund');
+
+CREATE TABLE notification (
+	notification_id      uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+	user_id              uuid REFERENCES "user",
+	notification_type_id uuid REFERENCES notification_type,
+	text                 TEXT,
+	json_meta            TEXT,
+	unix_time            BIGINT,
+	sent                 BOOLEAN DEFAULT FALSE,
+	status               BOOLEAN DEFAULT TRUE
 );
 
 CREATE TABLE user_wallet_transaction (

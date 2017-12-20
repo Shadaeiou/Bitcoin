@@ -9,6 +9,7 @@
     padding:                   10px;
     border-top-left-radius:    10px;
     border-bottom-left-radius: 10px;
+    z-index:                   6;
 }
 
 #newsfeed-expand-collapse-button {
@@ -25,7 +26,74 @@
     border-right:              1px solid black;
 }
 
+.flash {
+    animation: flashAnimation 1s;
+}
+
+@keyframes flashAnimation {
+   50% {
+        border: 1px solid black;
+   }
+}
+
+.newsfeed-counter {
+    display:           none;
+    position:          absolute;
+    top:               -21px;
+    right:             10px;
+    animation:         bounce 1s infinite alternate;
+    -webkit-animation: bounce 1s infinite alternate;
+}
+
+@keyframes bounce {
+    from {
+        transform: translateY(0px);
+    }
+    to {
+        transform: translateY(-5px);
+    }
+}
+@-webkit-keyframes bounce {
+    from {
+        transform: translateY(0px);
+    }
+    to {
+        transform: translateY(-15px);
+    }
+}
+
 #newsfeed-expand-collapse-button i {
 	margin-left: 19px;
     margin-top:  18px;
+}
+
+.Newsfeed {
+    height: 100%;
+    width:  100%;
+}
+
+#notification-container {
+    height:     100%;
+    width:      100%;
+    overflow-y: auto;
+}
+
+.notification-row {
+    padding:       5px;
+    border-radius: 10px;
+    height:        75px;
+    margin-top:    5px;
+}
+
+.notification-row-even {
+    background-color: lightgrey;
+    color:            black;
+}
+
+.notification-row-odd {
+    background-color: #444;
+}
+
+.notification-row-time {
+    font-size: 11px;
 }

@@ -177,4 +177,31 @@
 			this.initCall(callback, endPoint, 'DELETE', null, fullResponse, true);
 		}
 	};
+
+	Utility.Socket = {
+		connection: null,
+		connect: () => {
+			Utility.Socket.connection = window.io();
+		},
+		pair: (socketName, internalName) => {
+			Utility.Socket.connection.on(socketName, function(data) {Utility.Events.trigger(internalName, data);})
+		}
+	}
+
+	Utility.Events = {
+		events: {},
+		on: function(eventName, callback) {
+			eventName = eventName.toLowerCase();
+			if (!Utility.Events.events[eventName]) {Utility.Events.events[eventName] = [];}
+			Utility.Events.events[eventName].push(callback);
+		},
+		trigger: function(eventName, data) {
+			if (!Utility.Events.events[eventName] || !Utility.Events.events[eventName].length) {return;}
+			for (var ct = 0; ct < Utility.Events.events[eventName].length; ct++) {
+				Utility.Events.events[eventName][ct].call(this, data);
+			}
+		}
+	}
 }(window.Utility = window.Utility || {}));
+
+//# sourceURL=js/Utility.js

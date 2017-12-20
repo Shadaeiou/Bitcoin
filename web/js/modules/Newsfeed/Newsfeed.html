@@ -1,9 +1,16 @@
 <div class="Newsfeed" id="newsfeed">
 	<link rel="stylesheet" href="js/modules/Newsfeed/Newsfeed.css">
 
-	Newsfeed
+	<div id="notification-container"></div>
 
-	<div id="newsfeed-expand-collapse-button"><i class="fa fa-lg fa-minus"></i></div>
+	<div id="notification-row-container">
+		<div class="notification-row">
+			<div class="notification-row-time"></div>
+			<div class="notification-row-text"></div>
+		</div>
+	</div>
+
+	<div id="newsfeed-expand-collapse-button"><span class="newsfeed-counter badge badge-danger">0</span><i class="fa fa-lg fa-minus"></i></div>
 
 	<script src="js/modules/Newsfeed/Newsfeed.js"></script>
 </div>

@@ -1,19 +1,20 @@
-const express        = require('express')
-const app            = express()
-const server         = require('http').Server(app)
-const io             = require('socket.io').listen(server)
-const session        = require('express-session')
-const redisStore     = require('connect-redis')(session)
-const redis          = require("redis")
-const client         = redis.createClient()
-const path           = require('path')
-const bodyParser     = require('body-parser')
-const _              = require('lodash')
-const schedule       = require('node-schedule')
-const webBase        = '../web/'
-const RunImportPrice = require('./run_import_price')
-const RunAlgorithms  = require('./run_algorithms')
-const db             = require('./db')
+const express           = require('express')
+const app               = express()
+const server            = require('http').Server(app)
+const io                = require('socket.io').listen(server)
+const session           = require('express-session')
+const redisStore        = require('connect-redis')(session)
+const redis             = require("redis")
+const client            = redis.createClient()
+const path              = require('path')
+const bodyParser        = require('body-parser')
+const _                 = require('lodash')
+const schedule          = require('node-schedule')
+const webBase           = '../web/'
+const RunImportPrice    = require('./run_import_price')
+const RunAlgorithms     = require('./run_algorithms')
+const SendNotifications = require('./send_notifications')
+const db                = require('./db')
 
 // Import prices
 const importPrices   = schedule.scheduleJob('* * * * *', async function(){
@@ -24,8 +25,18 @@ const importPrices   = schedule.scheduleJob('* * * * *', async function(){
 	io.emit('new_price', twoRecords);
 });
 
-const runAlgorithms  = schedule.scheduleJob('* * * * *', function(){
-	RunAlgorithms.run()
+const runAlgorithms  = schedule.scheduleJob('* * * * *', async function(){
+	var algoResponses = await RunAlgorithms.run()
+	for (var ct = 0; ct < algoResponses.length; ct++) {
+		io.emit('algorithm_response_'+algoResponses[ct].user_id, algoResponses[ct].response);
+	}
+});
+
+const sendNotificaions = schedule.scheduleJob('* * * * *', async function() {
+	var notifications = await SendNotifications.run()
+	for (var ct = 0; ct < notifications.length; ct++) {
+		io.emit('notification_'+notifications[ct].user_id, notifications[ct]);
+	}
 });
 
 client.on("error", function (err) {
@@ -62,7 +73,11 @@ function initRoutes() {
 		'user',
 		'wallet',
 		'broker',
-		'user_broker'
+		'user_broker',
+		'currency',
+		'notification',
+		'notification_type',
+		'transaction'
 	]
 
 	_.each(subrouters, function(subroute_path) {

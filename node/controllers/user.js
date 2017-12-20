@@ -41,7 +41,7 @@ class User {
     async getUserInfo(userID) {
         // TODO: Finalize what we need to return
         let user = await this.getByID(userID)
-        return {name: user.first_name+' '+user.last_name}
+        return {name: user.first_name+' '+user.last_name, user_id: user.user_id}
     }
 
     async register(record) {

@@ -127,6 +127,8 @@ function onLoginSuccess(response) {
 
 	$('#welcome-message').text('Welcome '+response.data.name+'!');
 
+	window.UserData = response.data;
+
 	$('.fa-user-circle, .fa-caret-down').css('color', 'green');
 	$('#sign-in-button').toggle();
 	$('#sign-up-button').toggle();
@@ -139,11 +141,13 @@ function onLoginSuccess(response) {
 
 	$('#login-container').fadeOut();
 
-	var io = window.io();
-	$(document).data('socket.io', io);
-	io.on('new_price', function(msg){
-		console.log(msg)
-    });
+	Utility.Socket.connect();
+
+	Utility.Socket.pair('new_price',                                   'new_price'         );
+	Utility.Socket.pair('algorithm_response_'+window.UserData.user_id, 'algorithm_response');
+	Utility.Socket.pair('notification_'+window.UserData.user_id,       'notification'      );
+
+	Utility.Events.trigger('login');
 }
 
 function onLogoutButtonClick() {
@@ -171,3 +175,5 @@ function onLogoutSuccess(response) {
 	$('#algorithms-tab').toggle();
 	$('#wallets-tab').toggle();
 }
+
+//# sourceURL=js/main.js

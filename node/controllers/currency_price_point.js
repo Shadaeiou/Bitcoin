@@ -14,13 +14,13 @@ class CurrencyPricePoint {
 
     async getPrices(algorithm_id) {
         var algo       = await db.select().from('algorithm').where({algorithm_id: algorithm_id}).row()
-        var userWallet = await UserWallet.getByID(algo.user_wallet_id)
+        var userWallet = await UserWallet.getByID(algo.crypto_user_wallet_id)
 
         return await db.select([
             '*',
             'buy_price::money::numeric::float8  as buy_price_val',
             'sell_price::money::numeric::float8 as sell_price_val'
-        ]).from('currency_price_point').where({broker_id: userWallet.broker_id}).rows();
+        ]).from('currency_price_point').where({broker_id: userWallet.broker_id, currency_id: userWallet.currency_id}).rows();
     }
 
     async insert(record) {

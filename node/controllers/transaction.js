@@ -3,8 +3,12 @@ const serializerr = require('serializerr')
 const utils       = require('../utils')
 
 class Transaction {
-    async get(user_id) {
-
+    async get(wheres) {
+        return await db.select([
+            '*',
+            'buy_price::money::numeric::float8  as buy_price_val',
+            'price_needed::money::numeric::float8 as price_needed_val'
+        ]).from('user_wallet_transaction').where(wheres).rows()
     }
 
     async getByID(id) {

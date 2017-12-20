@@ -8,6 +8,17 @@ class Wallets {
 		this.$table = $('#wallets-table').bootstrapTable();
 		this.$el   .on('click', '#wallets-crud-add-button',        $.proxy(this.onAddButtonClick,     this));
 		$(document).on('click', '#wallets-add-user-broker-button', $.proxy(this.onAddUserBrokerClick, this));
+		$(document).on('change', '#selected-broker',               $.proxy(this.onBrokerChange,       this));
+	}
+
+	onBrokerChange(evt) {
+		var $option = $(evt.target).find('option:selected');
+		if ($option.text() != 'Private') {
+			$option.parent().parent().parent().find('.broker-only').show();
+		}
+		else {
+			$option.parent().parent().parent().find('.broker-only').hide();
+		}
 	}
 
 	onAddUserBrokerClick(evt) {
@@ -29,13 +40,15 @@ class Wallets {
 			var name    = $modal.find('#user-broker-name').val();
 			var broker  = $modal.find('#selected-broker').val();
 			var config  = $modal.find('#selected-broker-config').val();
+			var sb      = $modal.find('#selected-broker option:selected').is(':selected');
+			if ($modal.find('#selected-broker option:selected').text() == 'Private') {config = '';sb = false;}
 			var ubs     = Utility.Data.cache.user_broker.data;
 			var bFound  = false;
 			for (var ct = 0; ct < ubs.length; ct ++) {
 				if (ubs[ct].name == name) {bFound = true;}
 			}
 			if (bFound) {Utility.Alert.error('User broker already exists, please choose another name.');return false;}
-			Utility.Data.post('user_broker', $.noop, {json_record: JSON.stringify({name: name, broker_id: broker, config: config})});
+			Utility.Data.post('user_broker', $.noop, {json_record: JSON.stringify({name: name, broker_id: broker, config: config, sandbox: sb})});
 		}
 	}
 

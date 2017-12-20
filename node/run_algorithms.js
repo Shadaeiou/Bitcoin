@@ -4,16 +4,13 @@ const Algorithm = require('./controllers/algorithm')
 
 class RunAlgorithms {
     async run() {
-    	let response = await this.runAlgorithms()
-        return;
-    }
-
-    async runAlgorithms() {
-        let algorithms = await db.select().from('algorithm').where().rows()
+        let algResponses = [];
+        let algorithms   = await db.select().from('algorithm').where().rows()
         for (var ct = 0; ct < algorithms.length; ct++) {
-            if (algorithms[ct].run_frequency == -1) {continue;       }
-            if (algorithms[ct].run_frequency == 1)  {Algorithm.run(algorithms[ct].algorithm_id);}
+            if (algorithms[ct].run_frequency == -1) {continue;                                                                                                        }
+            if (algorithms[ct].run_frequency == 1)  {algResponses.push({user_id: algorithms[ct].user_id, response: await Algorithm.run(algorithms[ct].algorithm_id)});}
         }
+        return algResponses;
     }
 }
 

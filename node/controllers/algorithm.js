@@ -3,25 +3,29 @@ const {NodeVM, VMScript} = require('vm2');
 const serializerr        = require('serializerr')
 const utils              = require('../utils')
 const UserWallet         = require('./wallet')
+const Transaction        = require('./transaction')
 const CurrencyPricePoint = require('./currency_price_point')
 
 class Algorithm {
     async run(id) {
         // Get prices for this algo
-        var algo   = await this.getByID(id)
-        var prices = await CurrencyPricePoint.getPrices(id);
-        var wallet = await UserWallet.getByID(algo.user_wallet_id);
-        var vm     = new NodeVM({
+        var algo         = await this.getByID(id)
+        var prices       = await CurrencyPricePoint.getPrices(id);
+        var transactions = await Transaction.get({user_wallet_id: algo.crypto_user_wallet_id});
+        var wallet       = await UserWallet.getByID(algo.fund_user_wallet_id);
+        var vm           = new NodeVM({
+            timeout: 60000,
             console: 'redirect',
             require: {
                 external: ['moment']
             },
             sandbox: {
                 base: {
-                    buy:          function(amount, priceNeeded) {UserWallet.buy(algo.user_wallet_id, amount, priceNeeded);},
+                    buy:          function(amount, priceNeeded) {UserWallet.buy(algo.fund_user_wallet_id, algo.crypto_user_wallet_id, amount, priceNeeded);},
+                    sell:         function(transactions)        {UserWallet.sell(algo.crypto_user_wallet_id, algo.fund_user_wallet_id, transactions);      },
                     prices:       prices,
-                    wallet:       wallet
-                    // transactions: transactions
+                    wallet:       wallet,
+                    transactions: transactions
                 }
             },
             wrapper: 'null'
@@ -34,7 +38,7 @@ class Algorithm {
 
         vm.run(algo.text, __filename);
 
-        consoleOutput = consoleOutput.join('<br>');
+        // consoleOutput = consoleOutput.join('<br>');
 
         return consoleOutput;
     }
