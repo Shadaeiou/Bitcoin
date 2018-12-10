@@ -29,17 +29,6 @@ CREATE TABLE user_broker (
 	config     TEXT
 );
 
-CREATE TABLE user_wallet (
-	user_wallet_id SERIAL PRIMARY KEY,
-	name           varchar(40) NOT NULL CHECK (name <> ''),
-	user_broker_id INT REFERENCES user_broker,
-	balance        float8 NOT NULL,
-	currency_id    INT REFERENCES currency,
-	status         boolean DEFAULT FALSE,
-	created        timestamp DEFAULT NOW(),
-	modified       timestamp DEFAULT NOW()
-);
-
 CREATE TABLE currency (
 	currency_id SERIAL PRIMARY KEY,
 	name        varchar(40) NOT NULL CHECK (name <> ''),
@@ -51,6 +40,17 @@ INSERT INTO currency (name, full_name, type) VALUES ('btc', 'Bitcoin', 'crypto')
 INSERT INTO currency (name, full_name, type) VALUES ('eth', 'Ethereum', 'crypto');
 INSERT INTO currency (name, full_name, type) VALUES ('ltc', 'Litecoin', 'crypto');
 INSERT INTO currency (name, full_name, type) VALUES ('$', 'USD', 'fund');
+
+CREATE TABLE user_wallet (
+	user_wallet_id SERIAL PRIMARY KEY,
+	name           varchar(40) NOT NULL CHECK (name <> ''),
+	user_broker_id INT REFERENCES user_broker,
+	balance        float8 NOT NULL,
+	currency_id    INT REFERENCES currency,
+	status         boolean DEFAULT FALSE,
+	created        timestamp DEFAULT NOW(),
+	modified       timestamp DEFAULT NOW()
+);
 
 CREATE TABLE currency_price_point (
 	currency_price_point_id SERIAL PRIMARY KEY,
@@ -65,7 +65,7 @@ CREATE TABLE algorithm (
 	algorithm_id          uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
 	name                  varchar(40) NOT NULL CHECK (name <> ''),
 	text                  TEXT,
-	run_frequency         TEXT DEFAULT '-1';
+	run_frequency         TEXT DEFAULT '-1',
 	fund_user_wallet_id   INT REFERENCES user_wallet,
 	crypto_user_wallet_id INT REFERENCES user_wallet,
 	user_id               uuid REFERENCES "user",
